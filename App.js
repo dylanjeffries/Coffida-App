@@ -1,114 +1,139 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import React, {Component} from 'react';
+import {View, Text, StyleSheet, FlatList, Image} from 'react-native';
 
-import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+class CoffidaApp extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      text: '',
+      locationData: [],
+    };
+  }
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+  componentDidMount() {
+    fetch('http://10.0.2.2:3333/api/1.0.0/find', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': 'b9e4cf52ec7c8ec2fa3f91399727c9e6',
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((json) => {
+        this.setState({locationData: json});
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
-const App: () => React$Node = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
+  render() {
+    return (
+      <View style={styles.flexOne}>
+        <View style={styles.header}>
+          <Text>Header</Text>
+        </View>
+        <View style={styles.search}>
+          <Text>Search</Text>
+        </View>
+        <View style={styles.locations}>
+          <FlatList
+            style={styles.list}
+            data={this.state.locationData}
+            renderItem={({item}) => (
+              <View style={styles.item}>
+                <Image
+                  style={styles.photo}
+                  source={{
+                    uri:
+                      'https://i.gyazo.com/771bfc70d7172a89147a76323d482570.png',
+                  }}
+                />
+                <View style={styles.details}>
+                  <Text style={styles.name}>{item.location_name}</Text>
+                  <Text style={styles.town}>{item.location_town}</Text>
+                  <View style={styles.rating_reviews}>
+                    <Text style={styles.flexOne}>
+                      Overall Rating: {item.avg_overall_rating}
+                    </Text>
+                    <Text style={styles.flexOne}>Reviews: 12</Text>
+                  </View>
+                </View>
+              </View>
+            )}
+            keyExtractor={(item, index) => item.location_id}
+          />
+        </View>
+        <View style={styles.navigation}>
+          <Text>Navigation</Text>
+        </View>
+      </View>
+    );
+  }
+}
+
+{/* <Image
+//                   style={styles.photo}
+//                   source={{
+//                     uri:
+//                       'http://facebook.github.io/react-native/docs/assets/favicon.png',
+//                   }}
+//                 /> */}
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  flexOne: {
+    flex: 1,
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  list: {
+    padding: 20,
   },
-  body: {
-    backgroundColor: Colors.white,
+  item: {
+    backgroundColor: '#99d0ef',
+    flexDirection: 'row',
+    padding: 6,
+    marginBottom: 20,
+    borderRadius: 6,
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  photo: {
+    backgroundColor: '#1d7cb0',
+    resizeMode: 'contain',
+    height: 70,
+    width: 70,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
+  details: {
+    flex: 1,
+    paddingLeft: 6,
   },
-  sectionDescription: {
-    marginTop: 8,
+  name: {
     fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
   },
-  highlight: {
-    fontWeight: '700',
+  town: {
+    paddingBottom: 3,
   },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+  rating_reviews: {
+    flexDirection: 'row',
+    paddingTop: 3,
+    borderTopWidth: 1,
+    borderTopColor: 'black',
+  },
+  header: {
+    flex: 2,
+    backgroundColor: 'blue',
+  },
+  search: {
+    flex: 2,
+    backgroundColor: 'green',
+  },
+  locations: {
+    flex: 24,
+    backgroundColor: '#33a1de',
+  },
+  navigation: {
+    flex: 2,
+    backgroundColor: 'red',
   },
 });
 
-export default App;
+export default CoffidaApp;
