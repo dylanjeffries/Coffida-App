@@ -1,18 +1,32 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React, {Component} from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
+import Login from './screens/Login';
+import SignUp from './screens/SignUp';
 import Home from './screens/Home';
 
+const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+const SignedIn = () => {
+  return (
+    <Tab.Navigator screenOptions={{headerShown: false}}>
+      <Tab.Screen name="Home" component={Home} />
+    </Tab.Navigator>
+  );
+};
 
 class CoffidaApp extends Component {
   render() {
     return (
       <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen name="Home" component={Home} />
-        </Tab.Navigator>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen name="SignedIn" component={SignedIn} />
+        </Stack.Navigator>
       </NavigationContainer>
     );
   }

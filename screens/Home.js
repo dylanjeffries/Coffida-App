@@ -58,16 +58,15 @@ class Home extends Component {
                     <Text style={styles.flexOne}>
                       Overall Rating: {item.avg_overall_rating}
                     </Text>
-                    <Text style={styles.flexOne}>Reviews: 12</Text>
+                    <Text style={styles.flexOne}>
+                      Reviews: {item.location_reviews.length}
+                    </Text>
                   </View>
                 </View>
               </View>
             )}
             keyExtractor={(item, index) => item.location_id}
           />
-        </View>
-        <View style={styles.navigation}>
-          <Text>Navigation</Text>
         </View>
       </View>
     );
