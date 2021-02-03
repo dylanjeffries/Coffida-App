@@ -5,7 +5,9 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import Login from './screens/Login';
 import SignUp from './screens/SignUp';
-import Home from './screens/Home';
+import Locations from './screens/Locations';
+import MyReviews from './screens/MyReviews';
+import MyProfile from './screens/MyProfile';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -13,7 +15,9 @@ const Tab = createBottomTabNavigator();
 const SignedIn = () => {
   return (
     <Tab.Navigator screenOptions={{headerShown: false}}>
-      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Locations" component={Locations} />
+      <Tab.Screen name="MyReviews" component={MyReviews} />
+      <Tab.Screen name="MyProfile" component={MyProfile} />
     </Tab.Navigator>
   );
 };

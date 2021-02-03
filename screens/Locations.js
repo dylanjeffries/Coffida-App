@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, Image} from 'react-native';
 
-class Home extends Component {
+class Locations extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -127,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default Locations;
