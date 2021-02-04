@@ -60,12 +60,7 @@ class SignUp extends Component {
       <View style={styles.container}>
         <Image style={styles.logo} source={require('../resources/logo.png')} />
         <View style={styles.credentials}>
-          <TextInput
-            placeholder="Email"
-            onChangeText={(email) => this.setState({email})}
-            value={this.state.email}
-            textAlign={'center'}
-          />
+          <Text>SignUp</Text>
         </View>
         <View style={styles.credentials}>
           <TextInput

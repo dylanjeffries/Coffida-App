@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
+import {Colors} from '../resources/colors.js';
 
 class Login extends Component {
   constructor(props) {
@@ -20,7 +21,7 @@ class Login extends Component {
     };
   }
 
-  login() {
+  login = (navigation) => {
     let request = {
       email: this.state.email,
       password: this.state.password,
@@ -43,49 +44,67 @@ class Login extends Component {
       })
       .then((json) => {
         this.setState({invalidShow: false});
-        this.props.navigation.navigate('SignedIn');
+        navigation.navigate('SignedIn');
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
+
+  signUp = (navigation) => {
+    navigation.navigate('SignUp');
+  };
 
   isEmailPasswordEntered = () => {
-    return this.state.email.includes('@' && '.') && this.state.password !== ''
+    let emailRegex = /\w+@\w+\.\w+/;
+    return emailRegex.test(this.state.email) && this.state.password !== ''
       ? true
       : false;
   };
 
   render() {
+    const navigation = this.props.navigation;
     return (
       <View style={styles.container}>
         <Image style={styles.logo} source={require('../resources/logo.png')} />
-        <View style={styles.credentials}>
+        <View style={styles.emailPassword}>
           <TextInput
+            style={styles.textInput}
             placeholder="Email"
             onChangeText={(email) => this.setState({email})}
             value={this.state.email}
             textAlign={'center'}
           />
-        </View>
-        <View style={styles.credentials}>
           <TextInput
+            style={styles.textInput}
             placeholder="Password"
             secureTextEntry={true}
             onChangeText={(password) => this.setState({password})}
             value={this.state.password}
             textAlign={'center'}
           />
+          {this.state.invalidShow ? (
+            <Text style={styles.invalid}>Invalid Email or Password</Text>
+          ) : null}
         </View>
-        {this.state.invalidShow ? (
-          <Text style={styles.invalid}>Invalid Email or Password</Text>
-        ) : null}
-        <TouchableOpacity
-          style={styles.login}
-          onPress={() => this.login()}
-          disabled={!this.isEmailPasswordEntered()}>
-          <Text style={styles.login_text}>Login</Text>
-        </TouchableOpacity>
+        <View style={styles.loginSignUp}>
+          <TouchableOpacity
+            style={
+              this.isEmailPasswordEntered()
+                ? styles.login
+                : [styles.login, styles.loginDisabled]
+            }
+            onPress={() => this.login(navigation)}
+            disabled={!this.isEmailPasswordEntered()}>
+            <Text style={styles.loginText}>Login</Text>
+          </TouchableOpacity>
+          <View style={styles.signUpContainer}>
+            <Text style={styles.signUpText}>Don't have an account? </Text>
+            <TouchableOpacity onPress={() => this.signUp(navigation)}>
+              <Text style={styles.signUpText}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     );
   }
@@ -94,41 +113,57 @@ class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#33A1DE',
+    backgroundColor: Colors.blue_4,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 10,
+    borderColor: 'black',
   },
   logo: {
+    flex: 4,
     resizeMode: 'contain',
-    width: '90%',
-  },
-  credentials: {
-    backgroundColor: '#eeeeee',
-    borderRadius: 30,
     width: '70%',
+  },
+  emailPassword: {
+    flex: 3,
+    width: '70%',
+  },
+  textInput: {
+    backgroundColor: 'white',
+    borderRadius: 30,
     marginBottom: 30,
+  },
+  invalid: {
+    backgroundColor: 'white',
+    color: 'red',
+    padding: 10,
+    alignSelf: 'center',
+  },
+  loginSignUp: {
+    flex: 3,
+    width: '100%',
     alignItems: 'center',
   },
   login: {
-    backgroundColor: '#0a293b',
-    borderRadius: 30,
-    width: '30%',
+    backgroundColor: Colors.blue_7,
     padding: 10,
-    marginTop: 60,
+    borderRadius: 30,
     marginBottom: 30,
+    width: '30%',
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  login_text: {
+  loginDisabled: {
+    opacity: 0.4,
+  },
+  loginText: {
     color: 'white',
   },
-  invalid: {
-    backgroundColor: '#eeeeee',
-    color: 'red',
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+  signUpContainer: {
+    flexDirection: 'row',
   },
+  signUpText: {
+    color: 'white',
+  }
 });
 
 export default Login;

@@ -33,7 +33,10 @@ class Locations extends Component {
     return (
       <View style={styles.flexOne}>
         <View style={styles.header}>
-          <Text>Header</Text>
+          <Image
+            style={styles.logo}
+            source={require('../resources/logo.png')}
+          />
         </View>
         <View style={styles.search}>
           <Text>Search</Text>
@@ -111,7 +114,12 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 2,
-    backgroundColor: 'blue',
+    backgroundColor: '#135275',
+  },
+  logo: {
+    flex: 1,
+    alignSelf: 'center',
+    resizeMode: 'contain',
   },
   search: {
     flex: 2,
