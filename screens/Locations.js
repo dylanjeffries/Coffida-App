@@ -15,7 +15,7 @@ class Locations extends Component {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'X-Authorization': 'b9e4cf52ec7c8ec2fa3f91399727c9e6',
+        'X-Authorization': global.user.token,
       },
     })
       .then((response) => {
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     flex: 1,
+    width: '30%',
     alignSelf: 'center',
     resizeMode: 'contain',
   },

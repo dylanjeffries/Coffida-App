@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {View, Text, TextInput, StyleSheet} from 'react-native';
+import {ToastAndroid} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import Button from '../components/Button';
 import TextInputWithError from '../components/TextInputWithError';
-import { Colors } from '../resources/colors';
+import {Colors} from '../resources/colors';
 
 class SignUp extends Component {
   constructor(props) {
@@ -13,20 +14,38 @@ class SignUp extends Component {
       email: '',
       password: '',
       confirmPassword: '',
-      firstNameInvalid: false,
-      lastNameInvalid: false,
-      emailInvalid: false,
-      confirmPasswordInvalid: false,
     };
   }
 
-  login() {
+  isDetailsValid = () => {
+    return this.isNameValid(this.state.firstName) &&
+      this.isNameValid(this.state.lastName) &&
+      this.isEmailValid(this.state.email) &&
+      this.state.password !== '' &&
+      this.state.password === this.state.confirmPassword
+      ? true
+      : false;
+  };
+
+  isNameValid = (name) => {
+    let regex = /^[a-zA-Z]+$/;
+    return regex.test(name) ? true : false;
+  };
+
+  isEmailValid = (email) => {
+    let regex = /^\S+@\S+\.\S+$/;
+    return regex.test(email) ? true : false;
+  };
+
+  submit() {
     let request = {
+      first_name: this.state.firstName,
+      last_name: this.state.lastName,
       email: this.state.email,
       password: this.state.password,
     };
 
-    fetch('http://10.0.2.2:3333/api/1.0.0/user/login', {
+    fetch('http://10.0.2.2:3333/api/1.0.0/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,35 +53,20 @@ class SignUp extends Component {
       body: JSON.stringify(request),
     })
       .then((response) => {
-        if (response.status === 200) {
+        if (response.status === 201) {
           return response.json();
         } else {
-          this.setState({invalidShow: true});
+          ToastAndroid.show('Submission failed', ToastAndroid.SHORT);
         }
       })
       .then((json) => {
-        this.setState({invalidShow: false});
-        this.props.navigation.navigate('Home');
+        this.props.navigation.navigate('Login');
+        ToastAndroid.show('Account created', ToastAndroid.SHORT);
       })
       .catch((error) => {
         console.log(error);
       });
   }
-
-  isDetailsFilled = () => {
-    return this.state.email.includes('@' && '.') && this.state.password !== ''
-      ? true
-      : false;
-  };
-
-  pressTest = () => {
-    this.setState({
-      firstNameInvalid: true,
-      lastNameInvalid: true,
-      emailInvalid: true,
-      confirmPasswordInvalid: true,
-    });
-  };
 
   render() {
     return (
@@ -77,7 +81,7 @@ class SignUp extends Component {
             onChangeText={(firstName) => this.setState({firstName})}
             value={this.state.firstName}
             errorText="Name must only contain letters."
-            showError={this.state.firstNameInvalid}
+            showError={!this.isNameValid(this.state.firstName)}
           />
           <TextInputWithError
             containerStyle={styles.textInput}
@@ -85,7 +89,7 @@ class SignUp extends Component {
             onChangeText={(lastName) => this.setState({lastName})}
             value={this.state.lastName}
             errorText="Name must only contain letters."
-            showError={this.state.lastNameInvalid}
+            showError={!this.isNameValid(this.state.lastName)}
           />
           <TextInputWithError
             containerStyle={styles.textInput}
@@ -93,7 +97,7 @@ class SignUp extends Component {
             onChangeText={(email) => this.setState({email})}
             value={this.state.email}
             errorText="Email must match format: name@email.com"
-            showError={this.state.emailInvalid}
+            showError={!this.isEmailValid(this.state.email)}
           />
           <TextInputWithError
             containerStyle={styles.textInput}
@@ -101,8 +105,6 @@ class SignUp extends Component {
             secureTextEntry={true}
             onChangeText={(password) => this.setState({password})}
             value={this.state.password}
-            errorText="Passwords do not match."
-            showError={this.state.confirmPasswordInvalid}
           />
           <TextInputWithError
             containerStyle={styles.textInput}
@@ -111,11 +113,15 @@ class SignUp extends Component {
             onChangeText={(confirmPassword) => this.setState({confirmPassword})}
             value={this.state.confirmPassword}
             errorText="Passwords do not match."
-            showError={this.state.confirmPasswordInvalid}
+            showError={this.state.password !== this.state.confirmPassword}
           />
         </View>
         <View style={styles.submit}>
-          <Button text="Submit" onPress={() => this.pressTest()} />
+          <Button
+            text="Submit"
+            onPress={() => this.submit()}
+            disabled={!this.isDetailsValid()}
+          />
         </View>
       </View>
     );

@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CheckBox from '@react-native-community/checkbox';
 import React, {Component} from 'react';
 import {
   View,
@@ -18,7 +20,40 @@ class Login extends Component {
       email: '',
       password: '',
       invalidShow: false,
+      autoLogin: false,
     };
+  }
+
+  async storeCredentials(email, password) {
+    try {
+      await AsyncStorage.setItem('email', email);
+      await AsyncStorage.setItem('password', password);
+    } catch (error) {
+      console.log('Credential storage error', error);
+    }
+  }
+
+  async getCredentials() {
+    try {
+      let email = await AsyncStorage.getItem('email');
+      let password = await AsyncStorage.getItem('password');
+      return [email, password];
+    } catch (error) {
+      console.log('Credential storage error', error);
+    }
+  }
+
+  componentDidMount() {
+    this.getCredentials().then((credentials) => {
+      if (credentials[0] !== 'none') {
+        this.setState({
+          email: credentials[0],
+          password: credentials[1],
+          autoLogin: true,
+        });
+        this.login(this.props.navigation);
+      }
+    });
   }
 
   login = (navigation) => {
@@ -43,7 +78,18 @@ class Login extends Component {
         }
       })
       .then((json) => {
+        // Remove invalid popup if showing
         this.setState({invalidShow: false});
+        // Set User Information in global scope
+        global.user.id = json.id;
+        global.user.token = json.token;
+        // Store login details in storage
+        if (this.state.autoLogin) {
+          this.storeCredentials(this.state.email, this.state.password);
+        } else {
+          this.storeCredentials('none', 'none');
+        }
+        // Switch screens
         navigation.navigate('SignedIn');
       })
       .catch((error) => {
@@ -52,11 +98,15 @@ class Login extends Component {
   };
 
   signUp = (navigation) => {
+    this.setState({
+      email: '',
+      password: '',
+    });
     navigation.navigate('SignUp');
   };
 
   isCredentialsValid = () => {
-    let emailRegex = /\w+@\w+\.\w+/;
+    let emailRegex = /^\S+@\S+\.\S+$/;
     return emailRegex.test(this.state.email) && this.state.password !== ''
       ? true
       : false;
@@ -67,7 +117,7 @@ class Login extends Component {
     return (
       <View style={styles.container}>
         <Image style={styles.logo} source={require('../resources/logo.png')} />
-        <View style={styles.emailPassword}>
+        <View style={styles.credentials}>
           <TextInput
             style={styles.textInput}
             placeholder="Email"
@@ -83,6 +133,14 @@ class Login extends Component {
             value={this.state.password}
             textAlign={'center'}
           />
+          <View style={styles.flexRow}>
+            <Text style={styles.whiteText}>Auto-Login </Text>
+            <CheckBox
+              value={this.state.autoLogin}
+              onValueChange={(value) => this.setState({autoLogin: value})}
+              tintColors={{true: 'white', false: 'white'}}
+            />
+          </View>
           {this.state.invalidShow ? (
             <Text style={styles.invalid}>Invalid Email or Password</Text>
           ) : null}
@@ -93,10 +151,10 @@ class Login extends Component {
             onPress={() => this.login(navigation)}
             disabled={!this.isCredentialsValid()}
           />
-          <View style={styles.signUpContainer}>
-            <Text style={styles.signUpText}>Don't have an account? </Text>
+          <View style={styles.flexRow}>
+            <Text style={styles.whiteText}>Don't have an account? </Text>
             <TouchableOpacity onPress={() => this.signUp(navigation)}>
-              <Text style={styles.signUpText}>Sign Up</Text>
+              <Text style={styles.whiteText}>Sign Up</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -106,6 +164,14 @@ class Login extends Component {
 }
 
 const styles = StyleSheet.create({
+  flexRow: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  whiteText: {
+    textAlignVertical: 'center',
+    color: 'white',
+  },
   container: {
     flex: 1,
     backgroundColor: Colors.blue_4,
@@ -113,12 +179,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    flex: 4,
+    flex: 3,
     resizeMode: 'contain',
     width: '70%',
   },
-  emailPassword: {
-    flex: 3,
+  credentials: {
+    flex: 4,
     width: '70%',
   },
   textInput: {
@@ -130,18 +196,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     color: 'red',
     padding: 10,
+    marginTop: 30,
     alignSelf: 'center',
   },
   loginSignUp: {
     flex: 3,
     width: '100%',
     alignItems: 'center',
-  },
-  signUpContainer: {
-    flexDirection: 'row',
-  },
-  signUpText: {
-    color: 'white',
   },
 });
 

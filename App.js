@@ -23,6 +23,13 @@ const SignedIn = () => {
 };
 
 class CoffidaApp extends Component {
+  componentDidMount() {
+    global.user = {
+      id: 0,
+      token: '',
+    };
+  }
+
   render() {
     return (
       <NavigationContainer>
