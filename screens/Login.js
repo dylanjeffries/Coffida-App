@@ -7,13 +7,13 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
+import Button from '../components/Button.js';
 import {Colors} from '../resources/colors.js';
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: '',
       status: '',
       email: '',
       password: '',
@@ -55,7 +55,7 @@ class Login extends Component {
     navigation.navigate('SignUp');
   };
 
-  isEmailPasswordEntered = () => {
+  isCredentialsValid = () => {
     let emailRegex = /\w+@\w+\.\w+/;
     return emailRegex.test(this.state.email) && this.state.password !== ''
       ? true
@@ -88,16 +88,11 @@ class Login extends Component {
           ) : null}
         </View>
         <View style={styles.loginSignUp}>
-          <TouchableOpacity
-            style={
-              this.isEmailPasswordEntered()
-                ? styles.login
-                : [styles.login, styles.loginDisabled]
-            }
+          <Button
+            text="Login"
             onPress={() => this.login(navigation)}
-            disabled={!this.isEmailPasswordEntered()}>
-            <Text style={styles.loginText}>Login</Text>
-          </TouchableOpacity>
+            disabled={!this.isCredentialsValid()}
+          />
           <View style={styles.signUpContainer}>
             <Text style={styles.signUpText}>Don't have an account? </Text>
             <TouchableOpacity onPress={() => this.signUp(navigation)}>
@@ -116,8 +111,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.blue_4,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 10,
-    borderColor: 'black',
   },
   logo: {
     flex: 4,
@@ -144,26 +137,12 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-  login: {
-    backgroundColor: Colors.blue_7,
-    padding: 10,
-    borderRadius: 30,
-    marginBottom: 30,
-    width: '30%',
-    alignItems: 'center',
-  },
-  loginDisabled: {
-    opacity: 0.4,
-  },
-  loginText: {
-    color: 'white',
-  },
   signUpContainer: {
     flexDirection: 'row',
   },
   signUpText: {
     color: 'white',
-  }
+  },
 });
 
 export default Login;
