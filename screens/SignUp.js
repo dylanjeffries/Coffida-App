@@ -1,22 +1,22 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-} from 'react-native';
+import {View, Text, TextInput, StyleSheet} from 'react-native';
+import Button from '../components/Button';
+import TextInputWithError from '../components/TextInputWithError';
+import { Colors } from '../resources/colors';
 
 class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: '',
-      status: '',
+      firstName: '',
+      lastName: '',
       email: '',
       password: '',
-      invalidShow: false,
+      confirmPassword: '',
+      firstNameInvalid: false,
+      lastNameInvalid: false,
+      emailInvalid: false,
+      confirmPasswordInvalid: false,
     };
   }
 
@@ -49,37 +49,74 @@ class SignUp extends Component {
       });
   }
 
-  isEmailPasswordEntered = () => {
+  isDetailsFilled = () => {
     return this.state.email.includes('@' && '.') && this.state.password !== ''
       ? true
       : false;
   };
 
+  pressTest = () => {
+    this.setState({
+      firstNameInvalid: true,
+      lastNameInvalid: true,
+      emailInvalid: true,
+      confirmPasswordInvalid: true,
+    });
+  };
+
   render() {
     return (
       <View style={styles.container}>
-        <Image style={styles.logo} source={require('../resources/logo.png')} />
-        <View style={styles.credentials}>
-          <Text>SignUp</Text>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Enter your details below.</Text>
         </View>
-        <View style={styles.credentials}>
-          <TextInput
+        <View style={styles.inputs}>
+          <TextInputWithError
+            containerStyle={styles.textInput}
+            placeholder="First Name"
+            onChangeText={(firstName) => this.setState({firstName})}
+            value={this.state.firstName}
+            errorText="Name must only contain letters."
+            showError={this.state.firstNameInvalid}
+          />
+          <TextInputWithError
+            containerStyle={styles.textInput}
+            placeholder="Last Name"
+            onChangeText={(lastName) => this.setState({lastName})}
+            value={this.state.lastName}
+            errorText="Name must only contain letters."
+            showError={this.state.lastNameInvalid}
+          />
+          <TextInputWithError
+            containerStyle={styles.textInput}
+            placeholder="Email"
+            onChangeText={(email) => this.setState({email})}
+            value={this.state.email}
+            errorText="Email must match format: name@email.com"
+            showError={this.state.emailInvalid}
+          />
+          <TextInputWithError
+            containerStyle={styles.textInput}
             placeholder="Password"
             secureTextEntry={true}
             onChangeText={(password) => this.setState({password})}
             value={this.state.password}
-            textAlign={'center'}
+            errorText="Passwords do not match."
+            showError={this.state.confirmPasswordInvalid}
+          />
+          <TextInputWithError
+            containerStyle={styles.textInput}
+            placeholder="Confirm Password"
+            secureTextEntry={true}
+            onChangeText={(confirmPassword) => this.setState({confirmPassword})}
+            value={this.state.confirmPassword}
+            errorText="Passwords do not match."
+            showError={this.state.confirmPasswordInvalid}
           />
         </View>
-        {this.state.invalidShow ? (
-          <Text style={styles.invalid}>Invalid Email or Password</Text>
-        ) : null}
-        <TouchableOpacity
-          style={styles.login}
-          onPress={() => this.login()}
-          disabled={!this.isEmailPasswordEntered()}>
-          <Text style={styles.login_text}>Login</Text>
-        </TouchableOpacity>
+        <View style={styles.submit}>
+          <Button text="Submit" onPress={() => this.pressTest()} />
+        </View>
       </View>
     );
   }
@@ -92,36 +129,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  logo: {
-    resizeMode: 'contain',
-    width: '90%',
-  },
-  credentials: {
-    backgroundColor: '#eeeeee',
-    borderRadius: 30,
-    width: '70%',
-    marginBottom: 30,
-    alignItems: 'center',
-  },
-  login: {
-    backgroundColor: '#0a293b',
-    borderRadius: 30,
-    width: '30%',
-    padding: 10,
-    marginTop: 60,
-    marginBottom: 30,
-    alignItems: 'center',
+  header: {
+    flex: 1,
     justifyContent: 'center',
   },
-  login_text: {
+  headerText: {
+    padding: 10,
+    fontSize: 18,
+    backgroundColor: Colors.blue_7,
     color: 'white',
   },
-  invalid: {
-    backgroundColor: '#eeeeee',
-    color: 'red',
-    padding: 10,
+  inputs: {
+    flex: 4,
+    width: '70%',
+  },
+  textInput: {
+    marginBottom: 10,
+  },
+  submit: {
+    flex: 1,
+    width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 
