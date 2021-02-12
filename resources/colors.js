@@ -6,4 +6,5 @@ export const Colors = {
   blue_5: '#1d7cb0',
   blue_6: '#135275',
   blue_7: '#0a293b',
+  active: '#33efde',
 };
