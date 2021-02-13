@@ -3,7 +3,7 @@ import {ToastAndroid} from 'react-native';
 import {View, Text, StyleSheet} from 'react-native';
 import Button from '../components/Button';
 import TextInputWithError from '../components/TextInputWithError';
-import {Colors} from '../resources/colors';
+import {Colors} from '../resources/Colors';
 
 class SignUp extends Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class SignUp extends Component {
     return this.isNameValid(this.state.firstName) &&
       this.isNameValid(this.state.lastName) &&
       this.isEmailValid(this.state.email) &&
-      this.state.password !== '' &&
+      this.state.password.length > 5 &&
       this.state.password === this.state.confirmPassword
       ? true
       : false;
@@ -105,6 +105,8 @@ class SignUp extends Component {
             secureTextEntry={true}
             onChangeText={(password) => this.setState({password})}
             value={this.state.password}
+            errorText="Password must be at least 6 characters long."
+            showError={this.state.password.length < 6}
           />
           <TextInputWithError
             containerStyle={styles.textInput}
