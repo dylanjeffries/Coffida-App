@@ -12,7 +12,7 @@ import {
 import Button from '../components/Button.js';
 import {Colors} from '../resources/Colors';
 
-class Login extends Component {
+class SignIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,7 +20,7 @@ class Login extends Component {
       email: '',
       password: '',
       invalidShow: false,
-      autoLogin: false,
+      autoSignIn: false,
     };
   }
 
@@ -30,7 +30,7 @@ class Login extends Component {
       email: '',
       password: '',
       invalidShow: false,
-      autoLogin: false,
+      autoSignIn: false,
     });
   };
 
@@ -59,14 +59,14 @@ class Login extends Component {
         this.setState({
           email: credentials[0],
           password: credentials[1],
-          autoLogin: true,
+          autoSignIn: true,
         });
-        this.login(this.props.navigation);
+        this.signIn(this.props.navigation);
       }
     });
   }
 
-  login = (navigation) => {
+  signIn = (navigation) => {
     let request = {
       email: this.state.email,
       password: this.state.password,
@@ -92,7 +92,7 @@ class Login extends Component {
         global.user.id = json.id;
         global.user.token = json.token;
         // Store login details in storage
-        if (this.state.autoLogin) {
+        if (this.state.autoSignIn) {
           this.storeCredentials(this.state.email, this.state.password);
         } else {
           this.storeCredentials('none', 'none');
@@ -100,7 +100,7 @@ class Login extends Component {
         // Reset state
         this.resetState();
         // Switch screens
-        navigation.navigate('SignedIn');
+        navigation.navigate('Signed In');
       })
       .catch((error) => {
         console.log(error);
@@ -111,7 +111,7 @@ class Login extends Component {
     // Reset state
     this.resetState();
     // Go to Sign Up screen
-    navigation.navigate('SignUp');
+    navigation.navigate('Sign Up');
   };
 
   isCredentialsValid = () => {
@@ -143,10 +143,10 @@ class Login extends Component {
             textAlign={'center'}
           />
           <View style={styles.flexRow}>
-            <Text style={styles.whiteText}>Auto-Login </Text>
+            <Text style={styles.whiteText}>Remember me? </Text>
             <CheckBox
-              value={this.state.autoLogin}
-              onValueChange={(value) => this.setState({autoLogin: value})}
+              value={this.state.autoSignIn}
+              onValueChange={(value) => this.setState({autoSignIn: value})}
               tintColors={{true: 'white', false: 'white'}}
             />
           </View>
@@ -154,12 +154,12 @@ class Login extends Component {
             <Text style={styles.invalid}>Invalid Email or Password</Text>
           ) : null}
         </View>
-        <View style={styles.loginSignUp}>
+        <View style={styles.signInSignUp}>
           <Button
-            text="Login"
-            onPress={() => this.login(navigation)}
+            text="Sign In"
+            onPress={() => this.signIn(navigation)}
             disabled={!this.isCredentialsValid()}
-            buttonStyle={styles.loginButton}
+            buttonStyle={styles.signInButton}
           />
           <View style={styles.flexRow}>
             <Text style={styles.whiteText}>Don't have an account? </Text>
@@ -209,14 +209,14 @@ const styles = StyleSheet.create({
     marginTop: 30,
     alignSelf: 'center',
   },
-  loginSignUp: {
+  signInSignUp: {
     flex: 3,
     width: '100%',
     alignItems: 'center',
   },
-  loginButton: {
+  signInButton: {
     marginBottom: 30,
   },
 });
 
-export default Login;
+export default SignIn;

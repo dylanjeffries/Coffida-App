@@ -49,7 +49,7 @@ class MyProfile extends Component {
     // Reset asyncstorage credentials
     this.storeCredentials('none', 'none');
     // Go back to Login screen
-    navigation.navigate('Login');
+    navigation.navigate('Sign In');
   };
 
   render() {
@@ -68,7 +68,7 @@ class MyProfile extends Component {
           <Text style={styles.email}>{this.state.email}</Text>
           <Button
             buttonStyle={styles.update}
-            text="Update Information"
+            text="Update Profile"
             onPress={() => this.submit()}
           />
           <Button

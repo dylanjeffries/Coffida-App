@@ -9,7 +9,7 @@ import MyProfile from '../screens/MyProfile';
 
 const Tab = createBottomTabNavigator();
 
-class SignedIn extends Component {
+class SignedInBranch extends Component {
   render() {
     return (
       <Tab.Navigator
@@ -51,4 +51,4 @@ class SignedIn extends Component {
   }
 }
 
-export default SignedIn;
+export default SignedInBranch;
