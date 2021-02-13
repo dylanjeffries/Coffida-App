@@ -10,7 +10,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import Button from '../components/Button.js';
-import {Colors} from '../resources/colors.js';
+import {Colors} from '../resources/Colors';
 
 class Login extends Component {
   constructor(props) {
@@ -23,6 +23,16 @@ class Login extends Component {
       autoLogin: false,
     };
   }
+
+  resetState = () => {
+    this.setState({
+      status: '',
+      email: '',
+      password: '',
+      invalidShow: false,
+      autoLogin: false,
+    });
+  };
 
   async storeCredentials(email, password) {
     try {
@@ -78,8 +88,6 @@ class Login extends Component {
         }
       })
       .then((json) => {
-        // Remove invalid popup if showing
-        this.setState({invalidShow: false});
         // Set User Information in global scope
         global.user.id = json.id;
         global.user.token = json.token;
@@ -89,6 +97,8 @@ class Login extends Component {
         } else {
           this.storeCredentials('none', 'none');
         }
+        // Reset state
+        this.resetState();
         // Switch screens
         navigation.navigate('SignedIn');
       })
@@ -98,16 +108,15 @@ class Login extends Component {
   };
 
   signUp = (navigation) => {
-    this.setState({
-      email: '',
-      password: '',
-    });
+    // Reset state
+    this.resetState();
+    // Go to Sign Up screen
     navigation.navigate('SignUp');
   };
 
   isCredentialsValid = () => {
     let emailRegex = /^\S+@\S+\.\S+$/;
-    return emailRegex.test(this.state.email) && this.state.password !== ''
+    return emailRegex.test(this.state.email) && this.state.password.length > 5
       ? true
       : false;
   };
@@ -150,6 +159,7 @@ class Login extends Component {
             text="Login"
             onPress={() => this.login(navigation)}
             disabled={!this.isCredentialsValid()}
+            buttonStyle={styles.loginButton}
           />
           <View style={styles.flexRow}>
             <Text style={styles.whiteText}>Don't have an account? </Text>
@@ -203,6 +213,9 @@ const styles = StyleSheet.create({
     flex: 3,
     width: '100%',
     alignItems: 'center',
+  },
+  loginButton: {
+    marginBottom: 30,
   },
 });
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {Colors} from '../resources/colors.js';
+import {Colors} from '../resources/Colors';
 
 class Button extends Component {
   constructor(props) {
@@ -30,9 +30,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.blue_7,
     padding: 10,
     borderRadius: 30,
-    marginBottom: 30,
     width: '30%',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   disabled: {
     opacity: 0.4,
