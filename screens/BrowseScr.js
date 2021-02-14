@@ -15,7 +15,7 @@ const ratingItems = [
   {label: '5', value: 5},
 ];
 
-class Browse extends Component {
+class BrowseScr extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -174,4 +174,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Browse;
+export default BrowseScr;

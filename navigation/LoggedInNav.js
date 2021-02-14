@@ -3,9 +3,9 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../resources/Colors';
 
-import Browse from '../screens/Browse';
-import MyReviews from '../screens/MyReviews';
-import MyProfile from '../screens/MyProfile';
+import BrowseScr from '../screens/BrowseScr';
+import MyReviewsScr from '../screens/MyReviewsScr';
+import MyAccountNav from './MyAccountNav';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,7 +21,7 @@ class SignedInBranch extends Component {
               iconName = focused ? 'cafe' : 'cafe-outline';
             } else if (route.name === 'My Reviews') {
               iconName = focused ? 'reader' : 'reader-outline';
-            } else if (route.name === 'My Profile') {
+            } else if (route.name === 'My Account') {
               iconName = focused ? 'person' : 'person-outline';
             }
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -43,9 +43,9 @@ class SignedInBranch extends Component {
             fontSize: 12,
           },
         }}>
-        <Tab.Screen name="Browse" component={Browse} />
-        <Tab.Screen name="My Reviews" component={MyReviews} />
-        <Tab.Screen name="My Profile" component={MyProfile} />
+        <Tab.Screen name="Browse" component={BrowseScr} />
+        <Tab.Screen name="My Reviews" component={MyReviewsScr} />
+        <Tab.Screen name="My Account" component={MyAccountNav} />
       </Tab.Navigator>
     );
   }

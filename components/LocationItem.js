@@ -13,7 +13,7 @@ class LocationItem extends Component {
         <Image
           style={styles.photo}
           source={{
-            uri: 'https://i.gyazo.com/771bfc70d7172a89147a76323d482570.png',
+            uri: this.props.item.photo_path,
           }}
         />
         <View style={styles.details}>

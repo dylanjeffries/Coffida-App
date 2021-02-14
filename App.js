@@ -1,7 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React, {Component} from 'react';
 
-import Root from './navigation/Root';
+import RootNav from './navigation/RootNav';
 
 class CoffidaApp extends Component {
   componentDidMount() {
@@ -14,7 +14,7 @@ class CoffidaApp extends Component {
   render() {
     return (
       <NavigationContainer>
-        <Root />
+        <RootNav />
       </NavigationContainer>
     );
   }

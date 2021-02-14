@@ -5,7 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-class MyProfile extends Component {
+class MyProfileScr extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -45,11 +45,30 @@ class MyProfile extends Component {
       });
   }
 
-  signOut = (navigation) => {
-    // Reset asyncstorage credentials
-    this.storeCredentials('none', 'none');
+  editAccount = (navigation) => {
     // Go back to Login screen
-    navigation.navigate('Sign In');
+    navigation.navigate('Edit Account');
+  };
+
+  logout = (navigation) => {
+    fetch('http://10.0.2.2:3333/api/1.0.0/user/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': global.user.token,
+      },
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          // Reset asyncstorage credentials
+          this.storeCredentials('none', 'none');
+          // Go back to Login screen
+          navigation.navigate('Login');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   render() {
@@ -67,14 +86,14 @@ class MyProfile extends Component {
           <Text style={styles.name}>{this.state.name}</Text>
           <Text style={styles.email}>{this.state.email}</Text>
           <Button
-            buttonStyle={styles.update}
-            text="Update Profile"
-            onPress={() => this.submit()}
+            buttonStyle={styles.edit}
+            text="Edit Account"
+            onPress={() => this.editAccount(navigation)}
           />
           <Button
-            buttonStyle={styles.signOut}
-            text="Sign Out"
-            onPress={() => this.signOut(navigation)}
+            buttonStyle={styles.logout}
+            text="Logout"
+            onPress={() => this.logout(navigation)}
           />
         </View>
       </View>
@@ -109,13 +128,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'white',
   },
-  update: {
+  edit: {
     width: '45%',
     marginTop: 80,
   },
-  signOut: {
+  logout: {
     marginTop: 20,
   },
 });
 
-export default MyProfile;
+export default MyProfileScr;

@@ -5,7 +5,7 @@ import Button from '../components/Button';
 import TextInputWithError from '../components/TextInputWithError';
 import {Colors} from '../resources/Colors';
 
-class SignUp extends Component {
+class SignUpScr extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -161,4 +161,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUp;
+export default SignUpScr;

@@ -12,7 +12,7 @@ import {
 import Button from '../components/Button.js';
 import {Colors} from '../resources/Colors';
 
-class SignIn extends Component {
+class LoginScr extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,7 +20,7 @@ class SignIn extends Component {
       email: '',
       password: '',
       invalidShow: false,
-      autoSignIn: false,
+      autoLogin: false,
     };
   }
 
@@ -30,7 +30,7 @@ class SignIn extends Component {
       email: '',
       password: '',
       invalidShow: false,
-      autoSignIn: false,
+      autoLogin: false,
     });
   };
 
@@ -59,14 +59,14 @@ class SignIn extends Component {
         this.setState({
           email: credentials[0],
           password: credentials[1],
-          autoSignIn: true,
+          autoLogin: true,
         });
-        this.signIn(this.props.navigation);
+        this.login(this.props.navigation);
       }
     });
   }
 
-  signIn = (navigation) => {
+  login = (navigation) => {
     let request = {
       email: this.state.email,
       password: this.state.password,
@@ -91,8 +91,9 @@ class SignIn extends Component {
         // Set User Information in global scope
         global.user.id = json.id;
         global.user.token = json.token;
+        console.log(json.token);
         // Store login details in storage
-        if (this.state.autoSignIn) {
+        if (this.state.autoLogin) {
           this.storeCredentials(this.state.email, this.state.password);
         } else {
           this.storeCredentials('none', 'none');
@@ -100,7 +101,7 @@ class SignIn extends Component {
         // Reset state
         this.resetState();
         // Switch screens
-        navigation.navigate('Signed In');
+        navigation.navigate('Logged In');
       })
       .catch((error) => {
         console.log(error);
@@ -145,8 +146,8 @@ class SignIn extends Component {
           <View style={styles.flexRow}>
             <Text style={styles.whiteText}>Remember me? </Text>
             <CheckBox
-              value={this.state.autoSignIn}
-              onValueChange={(value) => this.setState({autoSignIn: value})}
+              value={this.state.autoLogin}
+              onValueChange={(value) => this.setState({autoLogin: value})}
               tintColors={{true: 'white', false: 'white'}}
             />
           </View>
@@ -154,12 +155,12 @@ class SignIn extends Component {
             <Text style={styles.invalid}>Invalid Email or Password</Text>
           ) : null}
         </View>
-        <View style={styles.signInSignUp}>
+        <View style={styles.loginSignUp}>
           <Button
-            text="Sign In"
-            onPress={() => this.signIn(navigation)}
+            text="Login"
+            onPress={() => this.login(navigation)}
             disabled={!this.isCredentialsValid()}
-            buttonStyle={styles.signInButton}
+            buttonStyle={styles.loginButton}
           />
           <View style={styles.flexRow}>
             <Text style={styles.whiteText}>Don't have an account? </Text>
@@ -209,14 +210,14 @@ const styles = StyleSheet.create({
     marginTop: 30,
     alignSelf: 'center',
   },
-  signInSignUp: {
+  loginSignUp: {
     flex: 3,
     width: '100%',
     alignItems: 'center',
   },
-  signInButton: {
+  loginButton: {
     marginBottom: 30,
   },
 });
 
-export default SignIn;
+export default LoginScr;
