@@ -116,6 +116,34 @@ class API {
       });
   };
 
+  // 10 - Add a photo to a review
+  static postLocationReviewPhoto = async (params) => {
+    return await fetch(
+      'http://10.0.2.2:3333/api/1.0.0/location/' +
+        params.loc_id +
+        '/review/' +
+        params.rev_id +
+        '/photo',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          'X-Authorization': global.user.token,
+        },
+      },
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return response;
+        } else {
+          throw Error(response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   // 17 - Find locations
   static getFind = async (params) => {
     return await fetch(

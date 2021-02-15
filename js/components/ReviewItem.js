@@ -3,6 +3,7 @@ import {StyleSheet, View, Text} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../resources/Colors';
 import IconButton from './IconButton';
+import IconText from './IconText';
 
 class ReviewItem extends Component {
   constructor(props) {
@@ -34,30 +35,30 @@ class ReviewItem extends Component {
           </View>
         ) : null}
         <View style={styles.ratings}>
-          <View style={styles.rating}>
-            <Ionicons name="checkmark-circle" size={20} color="white" />
-            <Text style={styles.ratingText}>
-              {this.props.item.review.overall_rating}
-            </Text>
-          </View>
-          <View style={styles.rating}>
-            <Ionicons name="cash" size={20} color="white" />
-            <Text style={styles.ratingText}>
-              {this.props.item.review.price_rating}
-            </Text>
-          </View>
-          <View style={styles.rating}>
-            <Ionicons name="ribbon" size={20} color="white" />
-            <Text style={styles.ratingText}>
-              {this.props.item.review.quality_rating}
-            </Text>
-          </View>
-          <View style={styles.rating}>
-            <Ionicons name="trash" size={20} color="white" />
-            <Text style={styles.ratingText}>
-              {this.props.item.review.clenliness_rating}
-            </Text>
-          </View>
+          <IconText
+            iconName="checkmark-circle"
+            iconSize={20}
+            iconColor="white"
+            text={this.props.item.review.overall_rating}
+          />
+          <IconText
+            iconName="cash"
+            iconSize={20}
+            iconColor="white"
+            text={this.props.item.review.price_rating}
+          />
+          <IconText
+            iconName="ribbon"
+            iconSize={20}
+            iconColor="white"
+            text={this.props.item.review.quality_rating}
+          />
+          <IconText
+            iconName="trash"
+            iconSize={20}
+            iconColor="white"
+            text={this.props.item.review.clenliness_rating}
+          />
         </View>
         <View style={styles.reviewBody}>
           <Text style={styles.reviewText}>
@@ -86,8 +87,9 @@ class ReviewItem extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.blue_7,
     padding: 5,
+    marginBottom: 10,
+    backgroundColor: Colors.blue_7,
   },
   topSection: {
     flex: 1,
@@ -110,15 +112,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 5,
-  },
-  rating: {
-    width: 'auto',
-    flexDirection: 'row',
-  },
-  ratingText: {
-    marginLeft: 5,
-    color: 'white',
-    textAlignVertical: 'center',
   },
   reviewBody: {
     flex: 1,

@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.blue_5,
   },
   list: {
+    width: '100%',
     padding: 20,
   },
 });
