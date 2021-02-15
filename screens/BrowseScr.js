@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, FlatList, Image, TextInput} from 'react-native';
+import {View, StyleSheet, FlatList, TextInput} from 'react-native';
 import {Colors} from '../resources/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '../components/Button';
 import Selector from '../components/Selector';
 import LocationItem from '../components/LocationItem';
+import Header from '../components/Header';
+import API from '../API';
+import IconButton from '../components/IconButton';
 
 const ratingItems = [
   {label: 'Any', value: 0},
@@ -28,50 +31,35 @@ class BrowseScr extends Component {
     };
   }
 
+  // Set Focus Listener for screen refresh
   componentDidMount() {
-    this.findLocations();
+    this.props.navigation.addListener('focus', () => this.onFocus());
   }
 
+  // When screen comes into focus
+  onFocus = () => {
+    this.findLocations();
+  };
+
+  // Use API to find locations that comply with set filters
   findLocations = () => {
-    fetch(
-      'http://10.0.2.2:3333/api/1.0.0/find?q=' +
-        this.state.searchQuery +
-        '&overall_rating=' +
-        this.state.overallMin +
-        '&price_rating=' +
-        this.state.priceMin +
-        '&quality_rating=' +
-        this.state.qualityMin +
-        '&clenliness_rating=' +
-        this.state.clenlinessMin,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Authorization': global.user.token,
-        },
-      },
-    )
-      .then((response) => {
-        return response.json();
-      })
-      .then((json) => {
-        this.setState({locationData: json});
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    let body = {
+      q: this.state.searchQuery,
+      overall_rating: this.state.overallMin,
+      price_rating: this.state.priceMin,
+      quality_rating: this.state.qualityMin,
+      clenliness_rating: this.state.clenlinessMin,
+    };
+
+    API.getFind(body).then((response) => {
+      this.setState({locationData: response});
+    });
   };
 
   render() {
     return (
       <View style={styles.flexOne}>
-        <View style={styles.header}>
-          <Image
-            style={styles.logo}
-            source={require('../resources/logo.png')}
-          />
-        </View>
+        <Header style={styles.header} />
         <View style={styles.filter}>
           <View style={styles.ratings}>
             <Selector
@@ -117,15 +105,22 @@ class BrowseScr extends Component {
               value={this.state.searchQuery}
               textAlign="center"
             />
-            <Button text="Refresh" onPress={() => this.findLocations()} />
+            <IconButton
+              buttonStyle={styles.refresh}
+              name="refresh-outline"
+              size={30}
+              color="white"
+              onPress={() => this.findLocations()}
+            />
+            {/* <Button text="Refresh" onPress={() => this.findLocations()} /> */}
           </View>
         </View>
         <View style={styles.locations}>
           <FlatList
-            padding={20}
+            style={styles.list}
             data={this.state.locationData}
             renderItem={({item}) => <LocationItem item={item} />}
-            keyExtractor={(item, index) => item.location_id}
+            keyExtractor={(item, index) => item.location_id.toString()}
           />
         </View>
       </View>
@@ -139,13 +134,6 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 2,
-    backgroundColor: Colors.blue_7,
-  },
-  logo: {
-    flex: 1,
-    width: '30%',
-    alignSelf: 'center',
-    resizeMode: 'contain',
   },
   filter: {
     flex: 4,
@@ -162,15 +150,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 5,
   },
-  locations: {
-    flex: 24,
-    backgroundColor: Colors.blue_5,
-  },
   searchBar: {
     width: '60%',
     marginRight: 10,
     borderRadius: 30,
     backgroundColor: 'white',
+  },
+  refresh: {
+    width: '30%',
+  },
+  locations: {
+    flex: 24,
+    backgroundColor: Colors.blue_5,
+  },
+  list: {
+    padding: 20,
   },
 });
 

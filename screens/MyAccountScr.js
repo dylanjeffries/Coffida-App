@@ -1,86 +1,55 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, Text} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 import {Colors} from '../resources/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Header from '../components/Header';
+import API from '../API';
 
 class MyProfileScr extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      email: '',
+      name: global.user.firstName + ' ' + global.user.lastName,
+      email: global.user.email,
     };
   }
 
-  async storeCredentials(email, password) {
-    try {
-      await AsyncStorage.setItem('email', email);
-      await AsyncStorage.setItem('password', password);
-    } catch (error) {
-      console.log('Credential storage error', error);
-    }
-  }
-
+  // Set Focus Listener for screen refresh
   componentDidMount() {
-    fetch('http://10.0.2.2:3333/api/1.0.0/user/' + global.user.id, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Authorization': global.user.token,
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((json) => {
-        this.setState({
-          name: json.first_name + ' ' + json.last_name,
-          email: json.email,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    this.props.navigation.addListener('focus', () => this.onFocus());
   }
 
-  editAccount = (navigation) => {
-    // Go back to Login screen
-    navigation.navigate('Edit Account');
+  // When screen comes into focus
+  onFocus = () => {
+    this.setState({
+      name: global.user.firstName + ' ' + global.user.lastName,
+      email: global.user.email,
+    });
   };
 
-  logout = (navigation) => {
-    fetch('http://10.0.2.2:3333/api/1.0.0/user/logout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Authorization': global.user.token,
-      },
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          // Reset asyncstorage credentials
-          this.storeCredentials('none', 'none');
-          // Go back to Login screen
-          navigation.navigate('Login');
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  editAccount = () => {
+    // Go back to Login screen
+    this.props.navigation.navigate('Edit Account');
+  };
+
+  logout = () => {
+    API.postUserLogout().then((response) => {
+      if (response.status === 200) {
+        // Reset AsyncStorage credentials
+        AsyncStorage.setItem('email', 'none');
+        AsyncStorage.setItem('password', 'none');
+        // Go back to Login screen
+        this.props.navigation.navigate('Login');
+      }
+    });
   };
 
   render() {
-    const navigation = this.props.navigation;
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Image
-            style={styles.logo}
-            source={require('../resources/logo.png')}
-          />
-        </View>
+        <Header style={styles.header} />
         <View style={styles.body}>
           <Ionicons name="person-circle-outline" size={250} color="white" />
           <Text style={styles.name}>{this.state.name}</Text>
@@ -88,12 +57,12 @@ class MyProfileScr extends Component {
           <Button
             buttonStyle={styles.edit}
             text="Edit Account"
-            onPress={() => this.editAccount(navigation)}
+            onPress={() => this.editAccount()}
           />
           <Button
             buttonStyle={styles.logout}
             text="Logout"
-            onPress={() => this.logout(navigation)}
+            onPress={() => this.logout()}
           />
         </View>
       </View>
@@ -108,13 +77,6 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 2,
-    backgroundColor: Colors.blue_7,
-  },
-  logo: {
-    flex: 1,
-    width: '30%',
-    alignSelf: 'center',
-    resizeMode: 'contain',
   },
   body: {
     flex: 28,

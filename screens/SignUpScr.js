@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {ToastAndroid} from 'react-native';
 import {View, Text, StyleSheet} from 'react-native';
+import API from '../API';
 import Button from '../components/Button';
 import TextInputWithError from '../components/TextInputWithError';
 import {Colors} from '../resources/Colors';
@@ -38,30 +39,22 @@ class SignUpScr extends Component {
   };
 
   submit() {
-    let request = {
+    let body = {
       first_name: this.state.firstName,
       last_name: this.state.lastName,
       email: this.state.email,
       password: this.state.password,
     };
 
-    fetch('http://10.0.2.2:3333/api/1.0.0/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(request),
-    })
+    API.postUser(body)
       .then((response) => {
         if (response.status === 201) {
-          return response.json();
+          // Switch back to Login screen and show success message
+          this.props.navigation.navigate('Login');
+          ToastAndroid.show('Account created', ToastAndroid.SHORT);
         } else {
           ToastAndroid.show('Submission failed', ToastAndroid.SHORT);
         }
-      })
-      .then((json) => {
-        this.props.navigation.navigate('Login');
-        ToastAndroid.show('Account created', ToastAndroid.SHORT);
       })
       .catch((error) => {
         console.log(error);
@@ -133,7 +126,7 @@ class SignUpScr extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#33A1DE',
+    backgroundColor: Colors.blue_5,
     alignItems: 'center',
     justifyContent: 'center',
   },

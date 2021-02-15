@@ -9,6 +9,7 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
+import API from '../API.js';
 import Button from '../components/Button.js';
 import {Colors} from '../resources/Colors';
 
@@ -34,22 +35,13 @@ class LoginScr extends Component {
     });
   };
 
-  async storeCredentials(email, password) {
-    try {
-      await AsyncStorage.setItem('email', email);
-      await AsyncStorage.setItem('password', password);
-    } catch (error) {
-      console.log('Credential storage error', error);
-    }
-  }
-
   async getCredentials() {
     try {
       let email = await AsyncStorage.getItem('email');
       let password = await AsyncStorage.getItem('password');
       return [email, password];
     } catch (error) {
-      console.log('Credential storage error', error);
+      console.log('Could not get credentials from AsyncStorage', error);
     }
   }
 
@@ -66,53 +58,51 @@ class LoginScr extends Component {
     });
   }
 
-  login = (navigation) => {
-    let request = {
+  //Use API to login the user using entered credentials
+  login = () => {
+    let body = {
       email: this.state.email,
       password: this.state.password,
     };
 
-    fetch('http://10.0.2.2:3333/api/1.0.0/user/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(request),
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          this.setState({invalidShow: true});
-          throw Error(response.statusText);
-        }
-      })
-      .then((json) => {
-        // Set User Information in global scope
-        global.user.id = json.id;
-        global.user.token = json.token;
-        console.log(json.token);
-        // Store login details in storage
+    API.postUserLogin(body).then((response) => {
+      if (response.status === 200) {
+        // Use API to get user info and store globally
+        this.setUserInfo(response);
+        // Store login details in AsyncStorage
         if (this.state.autoLogin) {
-          this.storeCredentials(this.state.email, this.state.password);
+          AsyncStorage.setItem('email', this.state.email);
+          AsyncStorage.setItem('password', this.state.password);
         } else {
-          this.storeCredentials('none', 'none');
+          AsyncStorage.setItem('email', 'none');
+          AsyncStorage.setItem('password', 'none');
         }
         // Reset state
         this.resetState();
         // Switch screens
-        navigation.navigate('Logged In');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        this.props.navigation.navigate('Logged In');
+      } else if (response.status === 400) {
+        this.setState({invalidShow: true});
+      }
+    });
   };
 
-  signUp = (navigation) => {
+  //Use API to get user info and set global variables
+  setUserInfo = (loginResponse) => {
+    global.user.id = loginResponse.json.id;
+    global.user.token = loginResponse.json.token;
+    API.getUser().then((userResponse) => {
+      global.user.firstName = userResponse.first_name;
+      global.user.lastName = userResponse.last_name;
+      global.user.email = userResponse.email;
+    });
+  };
+
+  signUp = () => {
     // Reset state
     this.resetState();
     // Go to Sign Up screen
-    navigation.navigate('Sign Up');
+    this.props.navigation.navigate('Sign Up');
   };
 
   isCredentialsValid = () => {
@@ -123,7 +113,6 @@ class LoginScr extends Component {
   };
 
   render() {
-    const navigation = this.props.navigation;
     return (
       <View style={styles.container}>
         <Image style={styles.logo} source={require('../resources/logo.png')} />
@@ -158,13 +147,13 @@ class LoginScr extends Component {
         <View style={styles.loginSignUp}>
           <Button
             text="Login"
-            onPress={() => this.login(navigation)}
+            onPress={() => this.login()}
             disabled={!this.isCredentialsValid()}
             buttonStyle={styles.loginButton}
           />
           <View style={styles.flexRow}>
             <Text style={styles.whiteText}>Don't have an account? </Text>
-            <TouchableOpacity onPress={() => this.signUp(navigation)}>
+            <TouchableOpacity onPress={() => this.signUp()}>
               <Text style={styles.whiteText}>Sign Up</Text>
             </TouchableOpacity>
           </View>
@@ -185,7 +174,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: Colors.blue_4,
+    backgroundColor: Colors.blue_5,
     alignItems: 'center',
     justifyContent: 'center',
   },

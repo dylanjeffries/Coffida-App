@@ -1,7 +1,9 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {Component} from 'react';
-import {Image, ToastAndroid} from 'react-native';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, ToastAndroid} from 'react-native';
+import API from '../API';
 import Button from '../components/Button';
+import Header from '../components/Header';
 import TextInputWithError from '../components/TextInputWithError';
 import {Colors} from '../resources/Colors';
 
@@ -9,33 +11,10 @@ class EditAccountScr extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: '',
-      lastName: '',
-      email: '',
+      firstName: global.user.firstName,
+      lastName: global.user.lastName,
+      email: global.user.email,
     };
-  }
-
-  componentDidMount() {
-    fetch('http://10.0.2.2:3333/api/1.0.0/user/' + global.user.id, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Authorization': global.user.token,
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((json) => {
-        this.setState({
-          firstName: json.first_name,
-          lastName: json.last_name,
-          email: json.email,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   }
 
   isDetailsValid = () => {
@@ -63,16 +42,16 @@ class EditAccountScr extends Component {
       email: this.state.email,
     };
 
-    fetch('http://10.0.2.2:3333/api/1.0.0/user/' + global.user.id, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Authorization': global.user.token,
-      },
-      body: JSON.stringify(body),
-    })
+    API.patchUser(body)
       .then((response) => {
         if (response.status === 200) {
+          // Update global user info
+          global.user.firstName = this.state.firstName;
+          global.user.lastName = this.state.lastName;
+          global.user.email = this.state.email;
+          // Update AsyncStorage email
+          AsyncStorage.setItem('email', this.state.email);
+          // Switch screens and show success message
           this.props.navigation.navigate('My Account');
           ToastAndroid.show('Save successful', ToastAndroid.SHORT);
         } else {
@@ -87,12 +66,7 @@ class EditAccountScr extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Image
-            style={styles.logo}
-            source={require('../resources/logo.png')}
-          />
-        </View>
+        <Header style={styles.header} />
         <View style={styles.body}>
           <View style={styles.title}>
             <Text style={styles.titleText}>Edit your details below.</Text>
@@ -143,13 +117,6 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 2,
-    backgroundColor: Colors.blue_7,
-  },
-  logo: {
-    flex: 1,
-    width: '30%',
-    alignSelf: 'center',
-    resizeMode: 'contain',
   },
   body: {
     flex: 28,

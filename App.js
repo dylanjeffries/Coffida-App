@@ -8,6 +8,9 @@ class CoffidaApp extends Component {
     global.user = {
       id: 0,
       token: '',
+      firstName: '',
+      lastName: '',
+      email: '',
     };
   }
 
