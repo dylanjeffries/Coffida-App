@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
 import API from '../API';
 import Header from '../components/Header';
+import ReviewItem from '../components/ReviewItem';
 import {Colors} from '../resources/Colors';
 
 class MyReviewsScr extends Component {
@@ -36,8 +37,9 @@ class MyReviewsScr extends Component {
         <Header style={styles.header} />
         <View style={styles.body}>
           <FlatList
+            style={styles.list}
             data={this.state.reviewData}
-            renderItem={({item}) => <Text>{item.review.review_body}</Text>}
+            renderItem={({item}) => <ReviewItem item={item} editable={true} />}
             keyExtractor={(item, index) => item.review.review_id.toString()}
           />
         </View>
@@ -57,6 +59,10 @@ const styles = StyleSheet.create({
   body: {
     flex: 28,
     alignItems: 'center',
+  },
+  list: {
+    width: '100%',
+    padding: 20,
   },
 });
 
