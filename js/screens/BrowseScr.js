@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View, StyleSheet, FlatList, TextInput} from 'react-native';
 import {Colors} from '../resources/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Button from '../components/Button';
 import Selector from '../components/Selector';
 import LocationItem from '../components/LocationItem';
 import Header from '../components/Header';

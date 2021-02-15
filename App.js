@@ -1,7 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React, {Component} from 'react';
 
-import RootNav from './navigation/RootNav';
+import RootNav from './js/navigation/RootNav';
 
 class CoffidaApp extends Component {
   componentDidMount() {
