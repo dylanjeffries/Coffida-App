@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Image, Text} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import API from '../API';
 import {Colors} from '../resources/Colors';
 import IconButton from './IconButton';
 import IconText from './IconText';
@@ -9,9 +9,28 @@ class LocationItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fav: false,
+      favourite: false,
     };
   }
+
+  componentDidMount() {
+    this.setFavourite();
+  }
+
+  setFavourite = () => {
+    this.setState({favourite: this.props.item.favourite});
+  };
+
+  toggleFavourite = () => {
+    let params = {loc_id: this.props.item.location_id};
+    if (this.state.favourite) {
+      API.deleteLocationFavourite(params);
+      this.setState({favourite: false});
+    } else {
+      API.postLocationFavourite(params);
+      this.setState({favourite: true});
+    }
+  };
 
   render() {
     return (
@@ -33,10 +52,11 @@ class LocationItem extends Component {
               </View>
             </View>
             <IconButton
-              buttonStyle={this.state.fav ? styles.favTrue : styles.favFalse}
-              name={this.state.fav ? 'star' : 'star-outline'}
+              buttonStyle={styles.favourite}
+              onPress={() => this.toggleFavourite()}
+              name={this.state.favourite ? 'star' : 'star-outline'}
               size={25}
-              color={this.state.fav ? 'yellow' : 'white'}
+              color={this.state.favourite ? 'yellow' : 'white'}
             />
           </View>
           <View style={styles.ratings}>
@@ -107,14 +127,9 @@ const styles = StyleSheet.create({
   town: {
     color: 'white',
   },
-  favTrue: {
+  favourite: {
     flex: 1,
     backgroundColor: 'transparent',
-  },
-  favFalse: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    opacity: 0.5,
   },
   ratings: {
     flex: 3,

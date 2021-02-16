@@ -38,6 +38,7 @@ class BrowseScr extends Component {
   // When screen comes into focus
   onFocus = () => {
     this.findLocations();
+    this.getFavourites();
   };
 
   // Use API to find locations that comply with set filters
@@ -49,11 +50,31 @@ class BrowseScr extends Component {
       quality_rating: this.state.qualityMin,
       clenliness_rating: this.state.clenlinessMin,
     };
+    // Find Locations API Call
+    API.getFind(body).then((findResponse) => {
+      let locationData = findResponse;
+      // Create empty favourites array
+      let favourites = [];
+      // Use API to get user info
+      API.getUser().then((favResponse) => {
+        // Populate favourites array with ids of favourite locations
+        for (var i = 0; i < favResponse.favourite_locations.length; i++) {
+          favourites.push(favResponse.favourite_locations[i].location_id);
+        }
 
-    API.getFind(body).then((response) => {
-      this.setState({locationData: response});
+        for (var i = 0; i < locationData.length; i++) {
+          locationData[i].favourite = favourites.includes(
+            locationData[i].location_id,
+          );
+        }
+
+        // Set location data to API result
+        this.setState({locationData: locationData});
+      });
     });
   };
+
+  getFavourites = () => {};
 
   render() {
     return (
@@ -118,7 +139,9 @@ class BrowseScr extends Component {
           <FlatList
             style={styles.list}
             data={this.state.locationData}
-            renderItem={({item}) => <LocationItem item={item} />}
+            renderItem={({item}) => (
+              <LocationItem item={item} refresh={() => this.findLocations()} />
+            )}
             keyExtractor={(item, index) => item.location_id.toString()}
           />
         </View>

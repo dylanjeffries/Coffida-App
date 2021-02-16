@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   disabled: {
-    opacity: 0.4,
+    //opacity: 0.4,
   },
 });
 

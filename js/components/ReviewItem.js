@@ -33,14 +33,12 @@ class ReviewItem extends Component {
 
   addLike = () => {
     API.postLocationReviewLike(this.state.params).then((response) => {
-      console.log(response);
       this.props.refresh();
     });
   };
 
   removeLike = () => {
     API.deleteLocationReviewLike(this.state.params).then((response) => {
-      console.log(response);
       this.props.refresh();
     });
   };

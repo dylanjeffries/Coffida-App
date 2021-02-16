@@ -187,13 +187,10 @@ class API {
     )
       .then((response) => {
         if (response.status === 200) {
-          return response.text();
+          return response;
         } else {
           throw Error(response.statusText);
         }
-      })
-      .then((text) => {
-        return {status: 200, text: text};
       })
       .catch((error) => {
         console.log(error);
@@ -217,13 +214,56 @@ class API {
     )
       .then((response) => {
         if (response.status === 200) {
-          return response.text();
+          return response;
         } else {
           throw Error(response.statusText);
         }
       })
-      .then((text) => {
-        return {status: 200, text: text};
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  // 15 - Favourite a location
+  static postLocationFavourite = async (params) => {
+    return await fetch(
+      'http://10.0.2.2:3333/api/1.0.0/location/' + params.loc_id + '/favourite',
+      {
+        method: 'POST',
+        headers: {
+          'X-Authorization': global.user.token,
+        },
+      },
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return response;
+        } else {
+          throw Error(response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  // 16 - Unfavourite a location
+  static deleteLocationFavourite = async (params) => {
+    return await fetch(
+      'http://10.0.2.2:3333/api/1.0.0/location/' + params.loc_id + '/favourite',
+      {
+        method: 'DELETE',
+        headers: {
+          'X-Authorization': global.user.token,
+        },
+      },
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return response;
+        } else {
+          throw Error(response.statusText);
+        }
       })
       .catch((error) => {
         console.log(error);
