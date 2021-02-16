@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {View, Text, StyleSheet, FlatList, Image} from 'react-native';
 import API from '../API';
 import Header from '../components/Header';
 import ReviewItem from '../components/ReviewItem';
@@ -11,6 +11,7 @@ class MyReviewsScr extends Component {
     this.state = {
       text: '',
       reviewData: [],
+      imageUrl: '',
     };
   }
 
@@ -39,7 +40,13 @@ class MyReviewsScr extends Component {
           <FlatList
             style={styles.list}
             data={this.state.reviewData}
-            renderItem={({item}) => <ReviewItem item={item} editable={true} />}
+            renderItem={({item}) => (
+              <ReviewItem
+                item={item}
+                refresh={() => this.getReviewData()}
+                editable={true}
+              />
+            )}
             keyExtractor={(item, index) => item.review.review_id.toString()}
           />
         </View>
@@ -63,6 +70,10 @@ const styles = StyleSheet.create({
   list: {
     width: '100%',
     padding: 20,
+  },
+  image: {
+    width: 100,
+    height: 100,
   },
 });
 

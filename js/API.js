@@ -51,7 +51,6 @@ class API {
     return await fetch('http://10.0.2.2:3333/api/1.0.0/user/logout', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'X-Authorization': global.user.token,
       },
     })
@@ -116,6 +115,33 @@ class API {
       });
   };
 
+  // 9 - Get a photo for a review
+  static getLocationReviewPhoto = async (params) => {
+    return await fetch(
+      'http://10.0.2.2:3333/api/1.0.0/location/' +
+        params.loc_id +
+        '/review/' +
+        params.rev_id +
+        '/photo?t=' +
+        Date.now(),
+      {
+        method: 'GET',
+      },
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return {status: 200, url: response.url};
+        } else if (response.status === 404) {
+          return {status: 404};
+        } else {
+          throw Error(response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   // 10 - Add a photo to a review
   static postLocationReviewPhoto = async (params) => {
     return await fetch(
@@ -138,6 +164,66 @@ class API {
         } else {
           throw Error(response.statusText);
         }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  // 12 - Like a review
+  static postLocationReviewLike = async (params) => {
+    return await fetch(
+      'http://10.0.2.2:3333/api/1.0.0/location/' +
+        params.loc_id +
+        '/review/' +
+        params.rev_id +
+        '/like',
+      {
+        method: 'POST',
+        headers: {
+          'X-Authorization': global.user.token,
+        },
+      },
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return response.text();
+        } else {
+          throw Error(response.statusText);
+        }
+      })
+      .then((text) => {
+        return {status: 200, text: text};
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  // 13 - Remove a like from a review
+  static deleteLocationReviewLike = async (params) => {
+    return await fetch(
+      'http://10.0.2.2:3333/api/1.0.0/location/' +
+        params.loc_id +
+        '/review/' +
+        params.rev_id +
+        '/like',
+      {
+        method: 'DELETE',
+        headers: {
+          'X-Authorization': global.user.token,
+        },
+      },
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return response.text();
+        } else {
+          throw Error(response.statusText);
+        }
+      })
+      .then((text) => {
+        return {status: 200, text: text};
       })
       .catch((error) => {
         console.log(error);

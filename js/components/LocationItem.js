@@ -79,14 +79,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.blue_7,
   },
   photo: {
-    width: 100,
-    height: 100,
-    flex: 2,
-    borderRadius: 50,
-    margin: 3,
+    width: 80,
+    height: 80,
+    borderRadius: 20,
+    margin: 5,
+    backgroundColor: 'red',
   },
   info: {
-    flex: 5,
+    flex: 1,
     paddingLeft: 5,
   },
   topSection: {

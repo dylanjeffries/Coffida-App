@@ -12,8 +12,6 @@ class CoffidaApp extends Component {
       lastName: '',
       email: '',
     };
-
-    
   }
 
   render() {
