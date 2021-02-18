@@ -3,7 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../resources/Colors';
 
-import BrowseScr from '../screens/BrowseScr';
+import BrowseNav from './BrowseNav';
 import MyReviewsScr from '../screens/MyReviewsScr';
 import MyAccountNav from './MyAccountNav';
 
@@ -43,7 +43,15 @@ class SignedInBranch extends Component {
             fontSize: 12,
           },
         }}>
-        <Tab.Screen name="Browse" component={BrowseScr} />
+        <Tab.Screen
+          name="Browse"
+          component={BrowseNav}
+          listeners={({navigation}) => ({
+            tabPress: () => {
+              navigation.navigate('Browse');
+            },
+          })}
+        />
         <Tab.Screen name="My Reviews" component={MyReviewsScr} />
         <Tab.Screen name="My Account" component={MyAccountNav} />
       </Tab.Navigator>

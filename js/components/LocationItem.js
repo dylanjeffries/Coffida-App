@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, Text} from 'react-native';
+import {StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
 import API from '../API';
 import {Colors} from '../resources/Colors';
 import IconButton from './IconButton';
@@ -21,6 +21,12 @@ class LocationItem extends Component {
     this.setState({favourite: this.props.item.favourite});
   };
 
+  viewLocation = () => {
+    this.props.navigation.navigate('Location', {
+      location_id: this.props.item.location_id,
+    });
+  };
+
   toggleFavourite = () => {
     let params = {loc_id: this.props.item.location_id};
     if (this.state.favourite) {
@@ -34,7 +40,9 @@ class LocationItem extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.container}
+        onPress={() => this.viewLocation()}>
         <Image
           style={styles.photo}
           source={{
@@ -86,7 +94,7 @@ class LocationItem extends Component {
             />
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

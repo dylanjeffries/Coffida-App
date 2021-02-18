@@ -38,7 +38,6 @@ class BrowseScr extends Component {
   // When screen comes into focus
   onFocus = () => {
     this.findLocations();
-    this.getFavourites();
   };
 
   // Use API to find locations that comply with set filters
@@ -73,8 +72,6 @@ class BrowseScr extends Component {
       });
     });
   };
-
-  getFavourites = () => {};
 
   render() {
     return (
@@ -140,7 +137,7 @@ class BrowseScr extends Component {
             style={styles.list}
             data={this.state.locationData}
             renderItem={({item}) => (
-              <LocationItem item={item} refresh={() => this.findLocations()} />
+              <LocationItem item={item} navigation={this.props.navigation} />
             )}
             keyExtractor={(item, index) => item.location_id.toString()}
           />
