@@ -185,6 +185,7 @@ const styles = StyleSheet.create({
   list: {
     width: '100%',
     padding: 20,
+    marginBottom: 20,
   },
 });
 

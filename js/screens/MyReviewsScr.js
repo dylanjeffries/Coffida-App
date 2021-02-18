@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, FlatList, Image} from 'react-native';
+import {View, StyleSheet, FlatList} from 'react-native';
 import API from '../API';
 import Header from '../components/Header';
 import ReviewItem from '../components/ReviewItem';
@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
   list: {
     width: '100%',
     padding: 20,
+    marginBottom: 20,
   },
   image: {
     width: 100,

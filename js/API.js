@@ -224,6 +224,26 @@ class API {
       });
   };
 
+  // 17 - Get location info
+  static getLocation = async (params) => {
+    return await fetch(
+      'http://10.0.2.2:3333/api/1.0.0/location/' + params.loc_id,
+      {
+        method: 'GET',
+      },
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          throw Error(response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   // 15 - Favourite a location
   static postLocationFavourite = async (params) => {
     return await fetch(

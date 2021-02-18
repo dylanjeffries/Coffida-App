@@ -1,22 +1,31 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
+import API from '../API';
 import Header from '../components/Header';
+import LocationItem from '../components/LocationItem';
 import {Colors} from '../resources/Colors';
 
 class LocationScr extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      location_id: this.props.route.params.location_id,
-    };
+    this.state = {location: {}};
+    this.getLocation();
   }
+
+  getLocation = () => {
+    let params = {loc_id: this.props.route.params.id};
+    API.getLocation(params).then((response) => {
+      response.favourite = this.props.route.params.favourite;
+      this.setState({location: response});
+    });
+  };
 
   render() {
     return (
       <View style={styles.container}>
         <Header style={styles.header} />
         <View style={styles.body}>
-          <Text>{this.state.location_id}</Text>
+          <LocationItem item={this.state.location} disabled={true} />
         </View>
       </View>
     );
@@ -33,7 +42,9 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 28,
-    alignItems: 'center',
+    //alignItems: 'center',
+    padding: 20,
+    width: '100%',
   },
 });
 

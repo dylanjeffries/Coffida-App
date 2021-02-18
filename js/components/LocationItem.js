@@ -8,33 +8,44 @@ import IconText from './IconText';
 class LocationItem extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      favourite: false,
-    };
+    this.state = props.item;
   }
 
-  componentDidMount() {
-    this.setFavourite();
+  componentDidUpdate(prevProps) {
+    if (prevProps.item !== this.props.item) {
+      this.setLocation();
+    }
   }
 
-  setFavourite = () => {
-    this.setState({favourite: this.props.item.favourite});
+  setLocation = () => {
+    this.setState(this.props.item);
   };
 
   viewLocation = () => {
     this.props.navigation.navigate('Location', {
-      location_id: this.props.item.location_id,
+      id: this.state.location_id,
+      favourite: this.state.favourite,
     });
   };
 
   toggleFavourite = () => {
-    let params = {loc_id: this.props.item.location_id};
+    let params = {loc_id: this.state.location_id};
     if (this.state.favourite) {
-      API.deleteLocationFavourite(params);
-      this.setState({favourite: false});
+      API.deleteLocationFavourite(params).then((response) => {
+        switch (response.status) {
+          case 200:
+            this.setState({favourite: false});
+            break;
+        }
+      });
     } else {
-      API.postLocationFavourite(params);
-      this.setState({favourite: true});
+      API.postLocationFavourite(params).then((response) => {
+        switch (response.status) {
+          case 200:
+            this.setState({favourite: true});
+            break;
+        }
+      });
     }
   };
 
@@ -42,21 +53,22 @@ class LocationItem extends Component {
     return (
       <TouchableOpacity
         style={styles.container}
+        disabled={this.props.disabled}
         onPress={() => this.viewLocation()}>
         <Image
           style={styles.photo}
           source={{
-            uri: this.props.item.photo_path,
+            uri: this.state.photo_path,
           }}
         />
         <View style={styles.info}>
           <View style={styles.topSection}>
             <View style={styles.nameTown}>
               <View>
-                <Text style={styles.name}>{this.props.item.location_name}</Text>
+                <Text style={styles.name}>{this.state.location_name}</Text>
               </View>
               <View>
-                <Text style={styles.town}>{this.props.item.location_town}</Text>
+                <Text style={styles.town}>{this.state.location_town}</Text>
               </View>
             </View>
             <IconButton
@@ -72,25 +84,25 @@ class LocationItem extends Component {
               iconName="checkmark-circle"
               iconSize={20}
               iconColor="white"
-              text={this.props.item.avg_overall_rating}
+              text={this.state.avg_overall_rating}
             />
             <IconText
               iconName="cash"
               iconSize={20}
               iconColor="white"
-              text={this.props.item.avg_price_rating}
+              text={this.state.avg_price_rating}
             />
             <IconText
               iconName="ribbon"
               iconSize={20}
               iconColor="white"
-              text={this.props.item.avg_quality_rating}
+              text={this.state.avg_quality_rating}
             />
             <IconText
               iconName="trash"
               iconSize={20}
               iconColor="white"
-              text={this.props.item.avg_clenliness_rating}
+              text={this.state.avg_clenliness_rating}
             />
           </View>
         </View>
@@ -118,7 +130,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
   topSection: {
-    flex: 1,
+    flex: 3,
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
@@ -140,7 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   ratings: {
-    flex: 3,
+    flex: 2,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
