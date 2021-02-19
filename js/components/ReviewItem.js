@@ -101,7 +101,6 @@ class ReviewItem extends Component {
             <View style={styles.reviewBody}>
               <Text style={styles.reviewText}>
                 {this.props.item.review.review_body}
-                {this.props.item.review.review_body}
               </Text>
             </View>
             <View style={styles.likes}>

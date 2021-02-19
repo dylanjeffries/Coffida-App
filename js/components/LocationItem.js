@@ -123,7 +123,6 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 20,
     margin: 5,
-    backgroundColor: 'red',
   },
   info: {
     flex: 1,
