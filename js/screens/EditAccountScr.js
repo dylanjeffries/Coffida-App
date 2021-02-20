@@ -11,11 +11,23 @@ class EditAccountScr extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: global.user.firstName,
-      lastName: global.user.lastName,
-      email: global.user.email,
+      firstName: '',
+      lastName: '',
+      email: '',
     };
+    this.getUserInfo();
   }
+
+  getUserInfo = async () => {
+    let first_name = await AsyncStorage.getItem('first_name');
+    let last_name = await AsyncStorage.getItem('last_name');
+    let email = await AsyncStorage.getItem('email');
+    this.setState({
+      firstName: first_name,
+      lastName: last_name,
+      email: email,
+    });
+  };
 
   isDetailsValid = () => {
     return this.isNameValid(this.state.firstName) &&
@@ -45,10 +57,8 @@ class EditAccountScr extends Component {
     API.patchUser(body)
       .then((response) => {
         if (response.status === 200) {
-          // Update global user info
-          global.user.firstName = this.state.firstName;
-          global.user.lastName = this.state.lastName;
-          global.user.email = this.state.email;
+          // Update user info in AsyncStorage
+          this.setUserInfo();
           // Update AsyncStorage email
           AsyncStorage.setItem('email', this.state.email);
           // Switch screens and show success message
@@ -61,6 +71,13 @@ class EditAccountScr extends Component {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  //Use API to get user info and set in AsyncStorage
+  setUserInfo = async () => {
+    await AsyncStorage.setItem('first_name', this.state.firstName);
+    await AsyncStorage.setItem('last_name', this.state.lastName);
+    await AsyncStorage.setItem('email', this.state.email);
   };
 
   render() {

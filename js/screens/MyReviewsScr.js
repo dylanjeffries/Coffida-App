@@ -26,10 +26,9 @@ class MyReviewsScr extends Component {
   };
 
   // Use API to get user reviews
-  getReviewData = () => {
-    API.getUser().then((response) => {
-      this.setState({reviewData: response.reviews});
-    });
+  getReviewData = async () => {
+    let response = await API.getUser();
+    this.setState({reviewData: response.json.reviews});
   };
 
   render() {
@@ -61,10 +60,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.blue_5,
   },
   header: {
-    flex: 2,
+    flex: 1,
   },
   body: {
-    flex: 28,
+    flex: 14,
     alignItems: 'center',
   },
   list: {

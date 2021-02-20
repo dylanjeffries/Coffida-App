@@ -17,85 +17,70 @@ class LoginScr extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      status: '',
       email: '',
       password: '',
-      invalidShow: false,
+      showInvalid: false,
       autoLogin: false,
     };
+    this.checkAutoLogin();
   }
 
   resetState = () => {
     this.setState({
-      status: '',
       email: '',
       password: '',
-      invalidShow: false,
+      showInvalid: false,
       autoLogin: false,
     });
   };
 
-  async getCredentials() {
-    try {
-      let email = await AsyncStorage.getItem('email');
-      let password = await AsyncStorage.getItem('password');
-      return [email, password];
-    } catch (error) {
-      console.log('Could not get credentials from AsyncStorage', error);
-    }
-  }
-
-  componentDidMount() {
-    this.getCredentials().then((credentials) => {
-      if (credentials[0] !== 'none') {
-        this.setState({
-          email: credentials[0],
-          password: credentials[1],
-          autoLogin: true,
-        });
-        this.login(this.props.navigation);
+  // Uses API to test token and user id from AsyncStorage for auto login
+  checkAutoLogin = async () => {
+    let autoLogin = await AsyncStorage.getItem('auto_login');
+    if (autoLogin === 'true') {
+      let response = await API.getUser();
+      if (response.status === 200) {
+        // Switch screens
+        this.props.navigation.navigate('Logged In');
       }
-    });
-  }
+    }
+  };
 
   //Use API to login the user using entered credentials
-  login = () => {
+  login = async () => {
     let body = {
       email: this.state.email,
       password: this.state.password,
     };
-
-    API.postUserLogin(body).then((response) => {
-      if (response.status === 200) {
-        // Use API to get user info and store globally
-        this.setUserInfo(response);
-        // Store login details in AsyncStorage
-        if (this.state.autoLogin) {
-          AsyncStorage.setItem('email', this.state.email);
-          AsyncStorage.setItem('password', this.state.password);
-        } else {
-          AsyncStorage.setItem('email', 'none');
-          AsyncStorage.setItem('password', 'none');
+    let loginResponse = await API.postUserLogin(body);
+    switch (loginResponse.status) {
+      case 200: // OK
+        await AsyncStorage.setItem('user_id', loginResponse.json.id.toString());
+        await AsyncStorage.setItem('token', loginResponse.json.token);
+        await AsyncStorage.setItem('email', this.state.email);
+        await AsyncStorage.setItem(
+          'auto_login',
+          this.state.autoLogin.toString(),
+        );
+        let infoResponse = await API.getUser();
+        if (infoResponse.status === 200) {
+          // Save first and last names to AsyncStorage
+          await AsyncStorage.setItem(
+            'first_name',
+            infoResponse.json.first_name,
+          );
+          await AsyncStorage.setItem('last_name', infoResponse.json.last_name);
+          // Reset state
+          this.resetState();
+          // Switch screens
+          this.props.navigation.navigate('Logged In');
         }
-        // Reset state
-        this.resetState();
-        // Switch screens
-        this.props.navigation.navigate('Logged In');
-      } else if (response.status === 400) {
-        this.setState({invalidShow: true});
-      }
-    });
-  };
+        break;
 
-  //Use API to get user info and set global variables
-  setUserInfo = (loginResponse) => {
-    global.user.id = loginResponse.json.id;
-    global.user.token = loginResponse.json.token;
-    API.getUser().then((userResponse) => {
-      global.user.firstName = userResponse.first_name;
-      global.user.lastName = userResponse.last_name;
-      global.user.email = userResponse.email;
-    });
+      case 400: // Invalid email/password
+        this.setState({showInvalid: true});
+        break;
+    }
   };
 
   signUp = () => {
@@ -107,7 +92,9 @@ class LoginScr extends Component {
 
   isCredentialsValid = () => {
     let emailRegex = /^\S+@\S+\.\S+$/;
-    return emailRegex.test(this.state.email) && this.state.password.length > 5
+    return emailRegex.test(this.state.email) &&
+      this.state.password !== null &&
+      this.state.password.length > 5
       ? true
       : false;
   };
@@ -140,7 +127,7 @@ class LoginScr extends Component {
               tintColors={{true: 'white', false: 'white'}}
             />
           </View>
-          {this.state.invalidShow ? (
+          {this.state.showInvalid ? (
             <Text style={styles.invalid}>Invalid Email or Password</Text>
           ) : null}
         </View>

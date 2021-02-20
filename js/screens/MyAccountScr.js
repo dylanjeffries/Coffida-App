@@ -11,8 +11,8 @@ class MyProfileScr extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: global.user.firstName + ' ' + global.user.lastName,
-      email: global.user.email,
+      name: '',
+      email: '',
     };
   }
 
@@ -22,10 +22,13 @@ class MyProfileScr extends Component {
   }
 
   // When screen comes into focus
-  onFocus = () => {
+  onFocus = async () => {
+    let first_name = await AsyncStorage.getItem('first_name');
+    let last_name = await AsyncStorage.getItem('last_name');
+    let email = await AsyncStorage.getItem('email');
     this.setState({
-      name: global.user.firstName + ' ' + global.user.lastName,
-      email: global.user.email,
+      name: first_name + ' ' + last_name,
+      email: email,
     });
   };
 
@@ -34,16 +37,14 @@ class MyProfileScr extends Component {
     this.props.navigation.navigate('Edit Account');
   };
 
-  logout = () => {
-    API.postUserLogout().then((response) => {
-      if (response.status === 200) {
-        // Reset AsyncStorage credentials
-        AsyncStorage.setItem('email', 'none');
-        AsyncStorage.setItem('password', 'none');
-        // Go back to Login screen
-        this.props.navigation.navigate('Login');
-      }
-    });
+  logout = async () => {
+    let response = await API.postUserLogout();
+    if (response.status === 200) {
+      // Set auto login to false in AsyncStorage
+      await AsyncStorage.setItem('auto_login', 'false');
+      // Go back to Login screen
+      this.props.navigation.navigate('Login');
+    }
   };
 
   render() {

@@ -41,7 +41,7 @@ class BrowseScr extends Component {
   };
 
   // Use API to find locations that comply with set filters
-  findLocations = () => {
+  findLocations = async () => {
     let body = {
       q: this.state.searchQuery,
       overall_rating: this.state.overallMin,
@@ -50,32 +50,28 @@ class BrowseScr extends Component {
       clenliness_rating: this.state.clenlinessMin,
     };
     // Find Locations API Call
-    API.getFind(body).then((findResponse) => {
-      let locationData = findResponse;
-      // Create empty favourites array
-      let favourites = [];
-      // Use API to get user info
-      API.getUser().then((favResponse) => {
-        // Populate favourites array with ids of favourite locations
-        for (var i = 0; i < favResponse.favourite_locations.length; i++) {
-          favourites.push(favResponse.favourite_locations[i].location_id);
-        }
-
-        for (var i = 0; i < locationData.length; i++) {
-          locationData[i].favourite = favourites.includes(
-            locationData[i].location_id,
-          );
-        }
-
-        // Set location data to API result
-        this.setState({locationData: locationData});
-      });
-    });
+    let findResponse = await API.getFind(body);
+    // Create empty favourites array
+    let favourites = [];
+    // Use API to get user info
+    let favResponse = await API.getUser();
+    // Populate favourites array with ids of favourite locations
+    for (var i = 0; i < favResponse.json.favourite_locations.length; i++) {
+      favourites.push(favResponse.json.favourite_locations[i].location_id);
+    }
+    // Test if each location is included in the favourites array and set accordingly
+    for (var i = 0; i < findResponse.length; i++) {
+      findResponse[i].favourite = favourites.includes(
+        findResponse[i].location_id,
+      );
+    }
+    // Set location data to API result
+    this.setState({locationData: findResponse});
   };
 
   render() {
     return (
-      <View style={styles.flexOne}>
+      <View style={styles.container}>
         <Header style={styles.header} />
         <View style={styles.filter}>
           <View style={styles.ratings}>
@@ -148,14 +144,14 @@ class BrowseScr extends Component {
 }
 
 const styles = StyleSheet.create({
-  flexOne: {
+  container: {
     flex: 1,
   },
   header: {
-    flex: 2,
+    flex: 1,
   },
   filter: {
-    flex: 4,
+    flex: 2,
     backgroundColor: Colors.blue_6,
     alignItems: 'center',
   },
@@ -179,7 +175,7 @@ const styles = StyleSheet.create({
     width: '30%',
   },
   locations: {
-    flex: 24,
+    flex: 12,
     backgroundColor: Colors.blue_5,
   },
   list: {

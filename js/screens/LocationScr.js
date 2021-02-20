@@ -16,6 +16,7 @@ class LocationScr extends Component {
       reviewData: [],
     };
     this.getLocation();
+    console.log('loc const');
   }
 
   getLocation = () => {
