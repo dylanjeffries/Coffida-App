@@ -127,6 +127,32 @@ class API {
       });
   };
 
+  // 6 - Add a new review
+  static postLocationReview = async (params, body) => {
+    let token = await AsyncStorage.getItem('token');
+    return await fetch(
+      'http://10.0.2.2:3333/api/1.0.0/location/' + params.loc_id + '/review',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Authorization': token,
+        },
+        body: JSON.stringify(body),
+      },
+    )
+      .then((response) => {
+        if (response.status === 201) {
+          return response;
+        } else {
+          throw Error(response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   // 9 - Get a photo for a review
   static getLocationReviewPhoto = async (params) => {
     return await fetch(

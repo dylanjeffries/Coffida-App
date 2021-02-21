@@ -9,6 +9,7 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import API from '../API.js';
 import Button from '../components/Button.js';
 import {Colors} from '../resources/Colors';
@@ -21,6 +22,7 @@ class LoginScr extends Component {
       password: '',
       showInvalid: false,
       autoLogin: false,
+      loading: true,
     };
     this.checkAutoLogin();
   }
@@ -31,6 +33,7 @@ class LoginScr extends Component {
       password: '',
       showInvalid: false,
       autoLogin: false,
+      loading: false,
     });
   };
 
@@ -40,9 +43,13 @@ class LoginScr extends Component {
     if (autoLogin === 'true') {
       let response = await API.getUser();
       if (response.status === 200) {
+        // Reset state
+        this.resetState();
         // Switch screens
         this.props.navigation.navigate('Logged In');
       }
+    } else {
+      this.setState({loading: false});
     }
   };
 
@@ -55,6 +62,9 @@ class LoginScr extends Component {
     let loginResponse = await API.postUserLogin(body);
     switch (loginResponse.status) {
       case 200: // OK
+        // Turn on loading overlay
+        this.setState({loading: true});
+        // Store info in AsyncStorage
         await AsyncStorage.setItem('user_id', loginResponse.json.id.toString());
         await AsyncStorage.setItem('token', loginResponse.json.token);
         await AsyncStorage.setItem('email', this.state.email);
@@ -102,6 +112,11 @@ class LoginScr extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Spinner
+          textStyle={styles.whiteText}
+          visible={this.state.loading}
+          textContent="Loading..."
+        />
         <Image style={styles.logo} source={require('../resources/logo.png')} />
         <View style={styles.credentials}>
           <TextInput

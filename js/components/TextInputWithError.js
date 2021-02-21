@@ -10,18 +10,23 @@ class TextInputWithError extends Component {
     return (
       <View style={this.props.containerStyle}>
         <TextInput
-          style={styles.textInput}
+          style={[styles.input, this.props.inputStyle]}
           placeholder={this.props.placeholder}
           onChangeText={this.props.onChangeText}
           value={this.props.value}
-          textAlign={'center'}
+          multiline={true}
+          textAlign={
+            this.props.textAlign !== undefined ? this.props.textAlign : 'center'
+          }
           secureTextEntry={this.props.secureTextEntry}
         />
         <Text
           style={
-            this.props.showError ? [styles.text, styles.error] : styles.text
+            this.props.showError
+              ? styles.error
+              : [styles.error, styles.transparent]
           }>
-          {this.props.showError ? this.props.errorText : null}
+          {this.props.errorText}
         </Text>
       </View>
     );
@@ -29,19 +34,20 @@ class TextInputWithError extends Component {
 }
 
 const styles = StyleSheet.create({
-  textInput: {
+  input: {
     backgroundColor: 'white',
     borderRadius: 30,
   },
-  text: {
+  error: {
     padding: 5,
-    marginTop: 5,
+    marginTop: 10,
     alignSelf: 'center',
     fontSize: 12,
-  },
-  error: {
     backgroundColor: 'white',
     color: 'red',
+  },
+  transparent: {
+    opacity: 0,
   },
 });
 

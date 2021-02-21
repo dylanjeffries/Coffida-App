@@ -77,36 +77,26 @@ class BrowseScr extends Component {
           <View style={styles.ratings}>
             <Selector
               items={ratingItems}
+              icon={{name: 'checkmark-circle', size: 20, color: 'white'}}
               onValueChange={(overallMin) => this.setState({overallMin})}
-              icon={() => {
-                return (
-                  <Ionicons name="checkmark-circle" size={20} color="white" />
-                );
-              }}
               value={this.state.overallMin}
             />
             <Selector
               items={ratingItems}
+              icon={{name: 'cash', size: 20, color: 'white'}}
               onValueChange={(priceMin) => this.setState({priceMin})}
-              icon={() => {
-                return <Ionicons name="cash" size={20} color="white" />;
-              }}
               value={this.state.priceMin}
             />
             <Selector
               items={ratingItems}
+              icon={{name: 'ribbon', size: 20, color: 'white'}}
               onValueChange={(qualityMin) => this.setState({qualityMin})}
-              icon={() => {
-                return <Ionicons name="ribbon" size={20} color="white" />;
-              }}
               value={this.state.qualityMin}
             />
             <Selector
               items={ratingItems}
+              icon={{name: 'trash', size: 20, color: 'white'}}
               onValueChange={(clenlinessMin) => this.setState({clenlinessMin})}
-              icon={() => {
-                return <Ionicons name="trash" size={20} color="white" />;
-              }}
               value={this.state.clenlinessMin}
             />
           </View>
@@ -158,6 +148,8 @@ const styles = StyleSheet.create({
   ratings: {
     flex: 1,
     flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-around',
     padding: 5,
   },
   search: {

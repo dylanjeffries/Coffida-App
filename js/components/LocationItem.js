@@ -23,7 +23,7 @@ class LocationItem extends Component {
 
   viewLocation = () => {
     this.props.navigation.navigate('Location', {
-      id: this.state.location_id,
+      location_id: this.state.location_id,
       favourite: this.state.favourite,
     });
   };
@@ -84,25 +84,45 @@ class LocationItem extends Component {
               iconName="checkmark-circle"
               iconSize={20}
               iconColor="white"
-              text={this.state.avg_overall_rating}
+              text={
+                this.state.avg_overall_rating !== undefined &&
+                this.state.avg_overall_rating !== null
+                  ? this.state.avg_overall_rating.toFixed(1)
+                  : 0.0
+              }
             />
             <IconText
               iconName="cash"
               iconSize={20}
               iconColor="white"
-              text={this.state.avg_price_rating}
+              text={
+                this.state.avg_price_rating !== undefined &&
+                this.state.avg_price_rating !== null
+                  ? this.state.avg_price_rating.toFixed(1)
+                  : 0.0
+              }
             />
             <IconText
               iconName="ribbon"
               iconSize={20}
               iconColor="white"
-              text={this.state.avg_quality_rating}
+              text={
+                this.state.avg_quality_rating !== undefined &&
+                this.state.avg_quality_rating !== null
+                  ? this.state.avg_quality_rating.toFixed(1)
+                  : 0.0
+              }
             />
             <IconText
               iconName="trash"
               iconSize={20}
               iconColor="white"
-              text={this.state.avg_clenliness_rating}
+              text={
+                this.state.avg_clenliness_rating !== undefined &&
+                this.state.avg_clenliness_rating !== null
+                  ? this.state.avg_clenliness_rating.toFixed(1)
+                  : 0.0
+              }
             />
           </View>
         </View>

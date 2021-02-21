@@ -29,7 +29,27 @@ class EditAccountScr extends Component {
     });
   };
 
-  isDetailsValid = () => {
+  save = async () => {
+    let body = {
+      first_name: this.state.firstName,
+      last_name: this.state.lastName,
+      email: this.state.email,
+    };
+    let response = await API.patchUser(body);
+    if (response.status === 200) {
+      // Update user info in AsyncStorage
+      await AsyncStorage.setItem('first_name', this.state.firstName);
+      await AsyncStorage.setItem('last_name', this.state.lastName);
+      await AsyncStorage.setItem('email', this.state.email);
+      // Show success message and witch screens
+      ToastAndroid.show('Account edited', ToastAndroid.SHORT);
+      this.props.navigation.navigate('My Account');
+    } else {
+      ToastAndroid.show('Save failed', ToastAndroid.SHORT);
+    }
+  };
+
+  isFormValid = () => {
     return this.isNameValid(this.state.firstName) &&
       this.isNameValid(this.state.lastName) &&
       this.isEmailValid(this.state.email)
@@ -45,39 +65,6 @@ class EditAccountScr extends Component {
   isEmailValid = (email) => {
     let regex = /^\S+@\S+\.\S+$/;
     return regex.test(email) ? true : false;
-  };
-
-  save = () => {
-    let body = {
-      first_name: this.state.firstName,
-      last_name: this.state.lastName,
-      email: this.state.email,
-    };
-
-    API.patchUser(body)
-      .then((response) => {
-        if (response.status === 200) {
-          // Update user info in AsyncStorage
-          this.setUserInfo();
-          // Update AsyncStorage email
-          AsyncStorage.setItem('email', this.state.email);
-          // Switch screens and show success message
-          this.props.navigation.navigate('My Account');
-          ToastAndroid.show('Save successful', ToastAndroid.SHORT);
-        } else {
-          ToastAndroid.show('Save failed', ToastAndroid.SHORT);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  //Use API to get user info and set in AsyncStorage
-  setUserInfo = async () => {
-    await AsyncStorage.setItem('first_name', this.state.firstName);
-    await AsyncStorage.setItem('last_name', this.state.lastName);
-    await AsyncStorage.setItem('email', this.state.email);
   };
 
   render() {
@@ -118,7 +105,7 @@ class EditAccountScr extends Component {
             <Button
               text="Save"
               onPress={() => this.save()}
-              disabled={!this.isDetailsValid()}
+              disabled={!this.isFormValid()}
             />
           </View>
         </View>

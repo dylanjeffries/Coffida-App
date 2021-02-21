@@ -18,7 +18,25 @@ class SignUpScr extends Component {
     };
   }
 
-  isDetailsValid = () => {
+  // Use API to create new account using entered details
+  submit = async () => {
+    let body = {
+      first_name: this.state.firstName,
+      last_name: this.state.lastName,
+      email: this.state.email,
+      password: this.state.password,
+    };
+    let response = await API.postUser(body);
+    if (response.status === 201) {
+      // Show success message and switch back to Login screen
+      ToastAndroid.show('Account created', ToastAndroid.SHORT);
+      this.props.navigation.navigate('Login');
+    } else {
+      ToastAndroid.show('Submission failed', ToastAndroid.SHORT);
+    }
+  };
+
+  isFormValid = () => {
     return this.isNameValid(this.state.firstName) &&
       this.isNameValid(this.state.lastName) &&
       this.isEmailValid(this.state.email) &&
@@ -38,34 +56,11 @@ class SignUpScr extends Component {
     return regex.test(email) ? true : false;
   };
 
-  submit() {
-    let body = {
-      first_name: this.state.firstName,
-      last_name: this.state.lastName,
-      email: this.state.email,
-      password: this.state.password,
-    };
-
-    API.postUser(body)
-      .then((response) => {
-        if (response.status === 201) {
-          // Switch back to Login screen and show success message
-          this.props.navigation.navigate('Login');
-          ToastAndroid.show('Account created', ToastAndroid.SHORT);
-        } else {
-          ToastAndroid.show('Submission failed', ToastAndroid.SHORT);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Enter your details below.</Text>
+        <View style={styles.title}>
+          <Text style={styles.titleText}>Enter your details below.</Text>
         </View>
         <View style={styles.inputs}>
           <TextInputWithError
@@ -115,7 +110,7 @@ class SignUpScr extends Component {
           <Button
             text="Submit"
             onPress={() => this.submit()}
-            disabled={!this.isDetailsValid()}
+            disabled={!this.isFormValid()}
           />
         </View>
       </View>
@@ -130,11 +125,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  header: {
+  title: {
     flex: 1,
     justifyContent: 'center',
   },
-  headerText: {
+  titleText: {
     padding: 10,
     fontSize: 18,
     backgroundColor: Colors.blue_7,

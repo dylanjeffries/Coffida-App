@@ -15,30 +15,38 @@ class LocationScr extends Component {
       location: {},
       reviewData: [],
     };
-    this.getLocation();
-    console.log('loc const');
   }
 
-  getLocation = () => {
-    let params = {loc_id: this.props.route.params.id};
-    API.getLocation(params).then((response) => {
-      // Set favourite state
-      response.favourite = this.props.route.params.favourite;
-      // Empty array for temporary storage of reviews
-      let reviewData = [];
-      // Loop over every review for the location
-      for (var i = 0; i < response.location_reviews.length; i++) {
-        // Process each review into review and location pairing for ReviewItem
-        reviewData.push({
-          review: response.location_reviews[i],
-          location: response,
-        });
-      }
-      // Set location and reviewData in state
-      this.setState({
+  // Set Focus Listener for screen refresh
+  componentDidMount() {
+    this.props.navigation.addListener('focus', () => this.onFocus());
+  }
+
+  // When screen comes into focus
+  onFocus = () => {
+    this.getLocation();
+  };
+
+  // Use API to collect location info and reviews and process reviews for list
+  getLocation = async () => {
+    let params = {loc_id: this.props.route.params.location_id};
+    let response = await API.getLocation(params);
+    // Set favourite state
+    response.favourite = this.props.route.params.favourite;
+    // Empty array for temporary storage of reviews
+    let reviewData = [];
+    // Loop over every review for the location
+    for (var i = 0; i < response.location_reviews.length; i++) {
+      // Process each review into review and location pairing for ReviewItem
+      reviewData.push({
+        review: response.location_reviews[i],
         location: response,
-        reviewData: reviewData,
       });
+    }
+    // Set location and reviewData in state
+    this.setState({
+      location: response,
+      reviewData: reviewData,
     });
   };
 
@@ -53,6 +61,11 @@ class LocationScr extends Component {
             <Ionicons.Button
               name="add-outline"
               size={30}
+              onPress={() =>
+                this.props.navigation.navigate('Add Review', {
+                  location_id: this.state.location.location_id,
+                })
+              }
               iconStyle={styles.addIcon}
               backgroundColor="transparent">
               <Text style={styles.reviewsBarText}>Add</Text>
@@ -82,10 +95,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.blue_5,
   },
   header: {
-    flex: 2,
+    flex: 1,
   },
   body: {
-    flex: 28,
+    flex: 14,
     padding: 20,
     width: '100%',
   },
