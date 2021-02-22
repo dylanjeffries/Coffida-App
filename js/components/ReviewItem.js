@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
 import API from '../API';
 import {Colors} from '../resources/Colors';
-import IconButton from './IconButton';
+import Button from './Button';
 import IconText from './IconText';
 
 class ReviewItem extends Component {
@@ -53,17 +53,21 @@ class ReviewItem extends Component {
                 ', ' +
                 this.props.item.location.location_town}
             </Text>
-            <IconButton
-              buttonStyle={styles.editButton}
-              name="pencil"
-              size={20}
-              color="orange"
+            <Button
+              style={styles.editButton}
+              icon={{
+                name: 'pencil',
+                size: 20,
+                color: 'orange',
+              }}
             />
-            <IconButton
-              buttonStyle={styles.editButton}
-              name="close"
-              size={24}
-              color="red"
+            <Button
+              style={styles.editButton}
+              icon={{
+                name: 'close',
+                size: 24,
+                color: 'red',
+              }}
             />
           </View>
         ) : null}
@@ -104,22 +108,26 @@ class ReviewItem extends Component {
               </Text>
             </View>
             <View style={styles.likes}>
-              <IconButton
-                buttonStyle={styles.likesButton}
+              <Button
+                style={styles.likesButton}
+                icon={{
+                  name: 'thumbs-up',
+                  size: 20,
+                  color: 'lime',
+                }}
                 onPress={() => this.addLike()}
-                name="thumbs-up"
-                size={20}
-                color="lime"
               />
               <Text style={styles.likesText}>
                 {this.props.item.review.likes}
               </Text>
-              <IconButton
-                buttonStyle={styles.likesButton}
+              <Button
+                style={styles.likesButton}
+                icon={{
+                  name: 'thumbs-down',
+                  size: 20,
+                  color: 'red',
+                }}
                 onPress={() => this.removeLike()}
-                name="thumbs-down"
-                size={20}
-                color="red"
               />
             </View>
           </View>

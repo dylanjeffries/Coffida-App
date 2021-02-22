@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
 import API from '../API';
 import {Colors} from '../resources/Colors';
-import IconButton from './IconButton';
+import Button from './Button';
 import IconText from './IconText';
 
 class LocationItem extends Component {
@@ -71,12 +71,14 @@ class LocationItem extends Component {
                 <Text style={styles.town}>{this.state.location_town}</Text>
               </View>
             </View>
-            <IconButton
-              buttonStyle={styles.favourite}
+            <Button
+              style={styles.favourite}
+              icon={{
+                name: this.state.favourite ? 'star' : 'star-outline',
+                size: 25,
+                color: this.state.favourite ? 'yellow' : 'white',
+              }}
               onPress={() => this.toggleFavourite()}
-              name={this.state.favourite ? 'star' : 'star-outline'}
-              size={25}
-              color={this.state.favourite ? 'yellow' : 'white'}
             />
           </View>
           <View style={styles.ratings}>

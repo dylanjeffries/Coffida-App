@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, FlatList, TextInput} from 'react-native';
 import {Colors} from '../resources/Colors';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import API from '../API';
 import Selector from '../components/Selector';
 import LocationItem from '../components/LocationItem';
 import Header from '../components/Header';
-import API from '../API';
-import IconButton from '../components/IconButton';
+import Button from '../components/Button';
 
 const ratingItems = [
   {label: 'Any', value: 0},
@@ -108,14 +107,11 @@ class BrowseScr extends Component {
               value={this.state.searchQuery}
               textAlign="center"
             />
-            <IconButton
-              buttonStyle={styles.refresh}
-              name="refresh-outline"
-              size={30}
-              color="white"
+            <Button
+              style={styles.refresh}
+              icon={{name: 'refresh-outline', size: 30, color: 'white'}}
               onPress={() => this.findLocations()}
             />
-            {/* <Button text="Refresh" onPress={() => this.findLocations()} /> */}
           </View>
         </View>
         <View style={styles.locations}>

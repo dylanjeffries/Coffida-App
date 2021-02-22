@@ -1,6 +1,6 @@
-import {Picker} from '@react-native-picker/picker';
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 class Selector extends Component {
@@ -21,19 +21,27 @@ class Selector extends Component {
 
   render() {
     return (
-      <View style={[styles.container, this.props.containerStyle]}>
+      <View style={[styles.container, this.props.style]}>
         {this.props.text !== undefined ? (
-          <Text style={styles.text}>{this.props.text}</Text>
+          <Text style={styles.textAndIcon}>{this.props.text}</Text>
         ) : null}
         <Ionicons
-          style={styles.icon}
+          style={styles.textAndIcon}
           name={this.props.icon.name}
           size={this.props.icon.size}
           color={this.props.icon.color}
         />
-        <Text style={[styles.value, this.props.valueStyle]}>
-          {this.getLabel()}
-        </Text>
+        <View style={styles.valueContainer}>
+          <Text style={[styles.value, this.props.valueStyle]}>
+            {this.getLabel()}
+          </Text>
+          <Ionicons
+            style={styles.downArrow}
+            name="caret-down-sharp"
+            size={12}
+            color="black"
+          />
+        </View>
         <Picker
           selectedValue={this.props.value}
           style={styles.picker}
@@ -60,26 +68,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  icon: {
-    marginRight: 5,
-  },
-  text: {
+  textAndIcon: {
     marginRight: 5,
     color: 'white',
   },
-  value: {
+  valueContainer: {
     width: 50,
-    height: '100%',
-    paddingHorizontal: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 5,
     borderRadius: 10,
-    textAlignVertical: 'center',
     backgroundColor: 'white',
+  },
+  value: {
+    flexGrow: 1,
   },
   picker: {
     position: 'absolute',
     width: '100%',
     height: '100%',
-    backgroundColor: 'red',
     opacity: 0,
   },
 });

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Image} from 'react-native';
 import {Colors} from '../resources/Colors';
-import IconButton from './IconButton';
+import Button from './Button';
 
 class Header extends Component {
   constructor(props) {
@@ -13,11 +13,13 @@ class Header extends Component {
       <View style={[styles.container, this.props.style]}>
         <View style={styles.left} />
         <Image style={styles.logo} source={require('../resources/logo.png')} />
-        <IconButton
-          buttonStyle={styles.help}
-          name={'help-circle-outline'}
-          size={35}
-          color={'white'}
+        <Button
+          style={styles.help}
+          icon={{
+            name: 'help-circle-outline',
+            size: 35,
+            color: 'white',
+          }}
         />
       </View>
     );

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../resources/Colors';
 
 class Button extends Component {
@@ -12,14 +13,21 @@ class Button extends Component {
       <TouchableOpacity
         style={
           this.props.disabled
-            ? [styles.button, styles.disabled, this.props.buttonStyle]
-            : [styles.button, this.props.buttonStyle]
+            ? [styles.button, styles.disabled, this.props.style]
+            : [styles.button, this.props.style]
         }
         onPress={this.props.onPress}
         disabled={this.props.disabled}>
-        <Text style={[styles.text, this.props.textStyle]}>
-          {this.props.text}
-        </Text>
+        {this.props.text !== undefined ? (
+          <Text style={styles.text}>{this.props.text}</Text>
+        ) : null}
+        {this.props.icon !== undefined ? (
+          <Ionicons
+            name={this.props.icon.name}
+            size={this.props.icon.size}
+            color={this.props.icon.color}
+          />
+        ) : null}
       </TouchableOpacity>
     );
   }
@@ -27,12 +35,11 @@ class Button extends Component {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: Colors.blue_7,
-    padding: 10,
-    borderRadius: 30,
-    width: '30%',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 5,
+    borderRadius: 30,
+    backgroundColor: Colors.blue_7,
   },
   disabled: {
     opacity: 0.4,

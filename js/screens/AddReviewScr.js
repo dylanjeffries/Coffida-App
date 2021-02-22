@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
+import { Image } from 'react-native';
 import {View, Text, StyleSheet, ToastAndroid} from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import API from '../API';
 import Button from '../components/Button';
 import Header from '../components/Header';
+import PhotoInput from '../components/PhotoInput';
 import Selector from '../components/Selector';
 import TextInputWithError from '../components/TextInputWithError';
 import {Colors} from '../resources/Colors';
@@ -27,6 +30,7 @@ class AddReviewScr extends Component {
       qualityRating: -1,
       clenlinessRating: -1,
       reviewBody: '',
+      photo: null,
     };
     // Create bad-words filter for review body profanity check
     var Filter = require('bad-words');
@@ -75,6 +79,7 @@ class AddReviewScr extends Component {
   };
 
   render() {
+    console.log(this.state.photo);
     return (
       <View style={styles.container}>
         <Header style={styles.header} />
@@ -138,6 +143,7 @@ class AddReviewScr extends Component {
             errorText="Body must not be empty and should only mention relevant topics."
             showError={!this.isReviewBodyValid()}
           />
+          <PhotoInput onPhotoChange={(photo) => this.setState({photo})} />
           <View style={styles.submit}>
             <Button
               text="Submit"
