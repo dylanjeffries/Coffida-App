@@ -32,18 +32,14 @@ class LocationItem extends Component {
     let params = {loc_id: this.state.location_id};
     if (this.state.favourite) {
       API.deleteLocationFavourite(params).then((response) => {
-        switch (response.status) {
-          case 200:
-            this.setState({favourite: false});
-            break;
+        if (response.status === 200) {
+          this.setState({favourite: false});
         }
       });
     } else {
       API.postLocationFavourite(params).then((response) => {
-        switch (response.status) {
-          case 200:
-            this.setState({favourite: true});
-            break;
+        if (response.status === 200) {
+          this.setState({favourite: true});
         }
       });
     }

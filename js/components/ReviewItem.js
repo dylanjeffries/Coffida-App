@@ -9,6 +9,7 @@ class ReviewItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      liked: this.props.item.review.liked,
       photoUrl: '',
       params: {
         loc_id: this.props.item.location.location_id,
@@ -31,16 +32,22 @@ class ReviewItem extends Component {
     });
   };
 
-  addLike = () => {
-    API.postLocationReviewLike(this.state.params).then((response) => {
-      this.props.refresh();
-    });
-  };
-
-  removeLike = () => {
-    API.deleteLocationReviewLike(this.state.params).then((response) => {
-      this.props.refresh();
-    });
+  toggleLike = () => {
+    if (this.state.liked) {
+      API.deleteLocationReviewLike(this.state.params).then((response) => {
+        if (response.status === 200) {
+          this.setState({liked: false});
+          this.props.refresh();
+        }
+      });
+    } else {
+      API.postLocationReviewLike(this.state.params).then((response) => {
+        if (response.status === 200) {
+          this.setState({liked: true});
+          this.props.refresh();
+        }
+      });
+    }
   };
 
   render() {
@@ -111,24 +118,15 @@ class ReviewItem extends Component {
               <Button
                 style={styles.likesButton}
                 icon={{
-                  name: 'thumbs-up',
+                  name: this.state.liked ? 'thumbs-up-sharp' : 'thumbs-up-sharp',
                   size: 20,
-                  color: 'lime',
+                  color: this.state.liked ? 'lime' : 'grey',
                 }}
-                onPress={() => this.addLike()}
+                onPress={() => this.toggleLike()}
               />
               <Text style={styles.likesText}>
                 {this.props.item.review.likes}
               </Text>
-              <Button
-                style={styles.likesButton}
-                icon={{
-                  name: 'thumbs-down',
-                  size: 20,
-                  color: 'red',
-                }}
-                onPress={() => this.removeLike()}
-              />
             </View>
           </View>
         </View>

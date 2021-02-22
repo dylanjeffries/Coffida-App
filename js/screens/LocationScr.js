@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
+import Spinner from 'react-native-loading-spinner-overlay';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import API from '../API';
 import Header from '../components/Header';
@@ -12,6 +13,7 @@ class LocationScr extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: true,
       location: {},
       reviewData: [],
     };
@@ -30,22 +32,35 @@ class LocationScr extends Component {
   // Use API to collect location info and reviews and process reviews for list
   getLocation = async () => {
     let params = {loc_id: this.props.route.params.location_id};
-    let response = await API.getLocation(params);
+    let locResponse = await API.getLocation(params);
     // Set favourite state
-    response.favourite = this.props.route.params.favourite;
+    locResponse.favourite = this.props.route.params.favourite;
+    // Create empty liked reviews array
+    let likedReviews = [];
+    // Use API to get user info
+    let likedResponse = await API.getUser();
+    // Populate lied reviews array with ids of liked reviews
+    for (var i = 0; i < likedResponse.json.liked_reviews.length; i++) {
+      likedReviews.push(likedResponse.json.liked_reviews[i].review.review_id);
+    }
     // Empty array for temporary storage of reviews
     let reviewData = [];
     // Loop over every review for the location
-    for (var i = 0; i < response.location_reviews.length; i++) {
+    for (var i = 0; i < locResponse.location_reviews.length; i++) {
+      // Test if each review is included in the liked reviews array and set accordingly
+      locResponse.location_reviews[i].liked = likedReviews.includes(
+        locResponse.location_reviews[i].review_id,
+      );
       // Process each review into review and location pairing for ReviewItem
       reviewData.push({
-        review: response.location_reviews[i],
-        location: response,
+        review: locResponse.location_reviews[i],
+        location: locResponse,
       });
     }
     // Set location and reviewData in state
     this.setState({
-      location: response,
+      loading: false,
+      location: locResponse,
       reviewData: reviewData,
     });
   };
@@ -53,6 +68,11 @@ class LocationScr extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Spinner
+          textStyle={styles.spinner}
+          visible={this.state.loading}
+          textContent="Loading..."
+        />
         <Header style={styles.header} />
         <View style={styles.body}>
           <LocationItem item={this.state.location} disabled={true} />
@@ -93,6 +113,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.blue_5,
+  },
+  spinner: {
+    textAlignVertical: 'center',
+    color: 'white',
   },
   header: {
     flex: 1,
