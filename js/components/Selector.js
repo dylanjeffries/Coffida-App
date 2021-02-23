@@ -43,8 +43,8 @@ class Selector extends Component {
           />
         </View>
         <Picker
-          selectedValue={this.props.value}
           style={styles.picker}
+          selectedValue={this.props.value}
           onValueChange={this.props.onValueChange}>
           {this.props.items.map((item) => {
             return (
@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
+    backgroundColor: 'black',
     opacity: 0,
   },
 });

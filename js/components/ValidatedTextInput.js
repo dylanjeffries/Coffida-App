@@ -22,8 +22,8 @@ class ValidatedTextInput extends Component {
         />
         <ValidationText
           style={styles.validationText}
-          text="Validated Text Input Bad Message"
-          hide={false}
+          text={this.props.validationText}
+          hide={this.props.hide}
         />
       </View>
     );

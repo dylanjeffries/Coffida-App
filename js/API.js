@@ -181,7 +181,7 @@ class API {
   };
 
   // 10 - Add a photo to a review
-  static postLocationReviewPhoto = async (params) => {
+  static postLocationReviewPhoto = async (params, body) => {
     let token = await AsyncStorage.getItem('token');
     return await fetch(
       'http://10.0.2.2:3333/api/1.0.0/location/' +
@@ -192,9 +192,10 @@ class API {
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/octet-stream',
+          'Content-Type': 'image/jpeg',
           'X-Authorization': token,
         },
+        body: body,
       },
     )
       .then((response) => {

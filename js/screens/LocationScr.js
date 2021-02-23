@@ -39,7 +39,7 @@ class LocationScr extends Component {
     let likedReviews = [];
     // Use API to get user info
     let likedResponse = await API.getUser();
-    // Populate lied reviews array with ids of liked reviews
+    // Populate liked reviews array with ids of liked reviews
     for (var i = 0; i < likedResponse.json.liked_reviews.length; i++) {
       likedReviews.push(likedResponse.json.liked_reviews[i].review.review_id);
     }

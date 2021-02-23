@@ -56,12 +56,12 @@ class MyProfileScr extends Component {
           <Text style={styles.name}>{this.state.name}</Text>
           <Text style={styles.email}>{this.state.email}</Text>
           <Button
-            buttonStyle={styles.edit}
+            style={styles.edit}
             text="Edit Account"
             onPress={() => this.editAccount()}
           />
           <Button
-            buttonStyle={styles.logout}
+            style={styles.logout}
             text="Logout"
             onPress={() => this.logout()}
           />
@@ -92,10 +92,11 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   edit: {
-    width: '45%',
+    width: '30%',
     marginTop: 80,
   },
   logout: {
+    width: '20%',
     marginTop: 20,
   },
 });

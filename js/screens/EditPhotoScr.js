@@ -5,7 +5,6 @@ import Button from '../components/Button';
 import Header from '../components/Header';
 import PhotoInput from '../components/PhotoInput';
 import Selector from '../components/Selector';
-import Title from '../components/Title';
 import ValidatedTextInput from '../components/ValidatedTextInput';
 import ValidationText from '../components/ValidationText';
 import {Colors} from '../resources/Colors';
@@ -81,7 +80,7 @@ class AddReviewScr extends Component {
       <View style={styles.container}>
         <Header style={styles.header} />
         <View style={styles.body}>
-          <Title style={styles.title} text="Enter your review below." />
+          <Text style={styles.title}>Ratings</Text>
           <View style={styles.row}>
             <Selector
               style={styles.selector}
@@ -121,18 +120,25 @@ class AddReviewScr extends Component {
             />
           </View>
           <ValidationText
-            style={styles.ratingValidationText}
+            style={[styles.ratingValidationText, styles.seperator]}
             text="Each rating must be given a value."
             hide={this.isRatingsValid()}
           />
+          <Text style={styles.title}>Review Body</Text>
           <ValidatedTextInput
-            style={styles.reviewBody}
+            style={[styles.reviewBody, styles.seperator]}
             placeholder="Tell us what you think..."
             paragraphMode={true}
             validationText="Body must not be empty and should only mention relevant topics."
             hide={this.isReviewBodyValid()}
             onTextChange={(reviewBody) => this.setState({reviewBody})}
             value={this.state.reviewBody}
+          />
+          <Text style={styles.title}>Photo</Text>
+          <PhotoInput
+            style={[styles.photo, styles.seperator]}
+            onPhotoChange={(photo) => this.setState({photo})}
+            photo={this.state.photo}
           />
           <Button
             style={styles.submit}
@@ -162,10 +168,20 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
+    alignSelf: 'baseline',
+    padding: 5,
+    marginBottom: 10,
+    fontSize: 16,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color: 'white',
+    backgroundColor: Colors.blue_7,
+  },
+  seperator: {
     marginBottom: 15,
   },
   row: {
-    flex: 1,
+    flex: 2,
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
@@ -173,16 +189,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   ratingValidationText: {
-    marginBottom: 15,
+    marginTop: 5,
   },
   reviewBody: {
-    flex: 5,
-    marginBottom: 15,
+    flex: 8,
+  },
+  photo: {
+    flex: 6,
   },
   submit: {
     width: '30%',
-    flex: 4,
+    flex: 1,
     alignSelf: 'center',
+    margin: 10,
   },
 });
 

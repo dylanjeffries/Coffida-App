@@ -22,6 +22,16 @@ class ReviewItem extends Component {
     this.getPhoto();
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.item !== this.props.item) {
+      this.setLiked();
+    }
+  }
+
+  setLiked = () => {
+    this.setState({liked: this.props.item.review.liked});
+  };
+
   getPhoto = () => {
     API.getLocationReviewPhoto(this.state.params).then((response) => {
       if (response.status === 200) {
@@ -61,7 +71,19 @@ class ReviewItem extends Component {
                 this.props.item.location.location_town}
             </Text>
             <Button
-              style={styles.editButton}
+              style={styles.editButtonContainer}
+              iconStyle={styles.editButtonIcon}
+              buttonStyle={styles.editButton}
+              icon={{
+                name: 'image',
+                size: 20,
+                color: 'cyan',
+              }}
+            />
+            <Button
+              style={styles.editButtonContainer}
+              iconStyle={styles.editButtonIcon}
+              buttonStyle={styles.editButton}
               icon={{
                 name: 'pencil',
                 size: 20,
@@ -69,10 +91,12 @@ class ReviewItem extends Component {
               }}
             />
             <Button
-              style={styles.editButton}
+              style={styles.editButtonContainer}
+              iconStyle={styles.editButtonIcon}
+              buttonStyle={styles.editButton}
               icon={{
                 name: 'close',
-                size: 24,
+                size: 20,
                 color: 'red',
               }}
             />
@@ -80,7 +104,9 @@ class ReviewItem extends Component {
         ) : null}
         <View style={styles.mainSection}>
           {this.state.photoUrl ? (
-            <Image style={styles.photo} source={{uri: this.state.photoUrl}} />
+            <View style={styles.photoContainer}>
+              <Image style={styles.photo} source={{uri: this.state.photoUrl}} />
+            </View>
           ) : null}
           <View style={styles.info}>
             <View style={styles.ratings}>
@@ -114,20 +140,16 @@ class ReviewItem extends Component {
                 {this.props.item.review.review_body}
               </Text>
             </View>
-            <View style={styles.likes}>
-              <Button
-                style={styles.likesButton}
-                icon={{
-                  name: this.state.liked ? 'thumbs-up-sharp' : 'thumbs-up-sharp',
-                  size: 20,
-                  color: this.state.liked ? 'lime' : 'grey',
-                }}
-                onPress={() => this.toggleLike()}
-              />
-              <Text style={styles.likesText}>
-                {this.props.item.review.likes}
-              </Text>
-            </View>
+            <Button
+              style={styles.likes}
+              icon={{
+                name: 'thumbs-up-sharp',
+                size: 20,
+                color: this.state.liked ? 'lime' : 'grey',
+              }}
+              textAfter={this.props.item.review.likes}
+              onPress={() => this.toggleLike()}
+            />
           </View>
         </View>
       </View>
@@ -144,31 +166,42 @@ const styles = StyleSheet.create({
   editSection: {
     flex: 1,
     flexDirection: 'row',
+    paddingBottom: 5,
     borderBottomWidth: 1,
     borderBottomColor: 'white',
-    marginBottom: 5,
   },
   location: {
-    flex: 12,
+    flex: 6,
     color: 'white',
     textAlignVertical: 'center',
   },
-  editButton: {
+  editButtonContainer: {
     flex: 1,
+    padding: 0,
     backgroundColor: 'transparent',
+  },
+  editButtonIcon: {
+    marginHorizontal: 0,
+  },
+  editButton: {
+    padding: 5,
   },
   mainSection: {
     flexDirection: 'row',
     paddingTop: 5,
   },
+  photoContainer: {
+    flex: 1,
+  },
   photo: {
-    width: 80,
-    height: 80,
+    flex: 1,
     borderRadius: 20,
     margin: 5,
+    resizeMode: 'cover',
   },
   info: {
-    flex: 1,
+    flex: 2,
+    paddingTop: 5,
   },
   ratings: {
     flex: 1,
@@ -188,16 +221,7 @@ const styles = StyleSheet.create({
   },
   likes: {
     flex: 1,
-    flexDirection: 'row',
-    alignSelf: 'center',
-  },
-  likesButton: {
     backgroundColor: 'transparent',
-  },
-  likesText: {
-    marginHorizontal: 5,
-    color: 'white',
-    textAlignVertical: 'center',
   },
 });
 
