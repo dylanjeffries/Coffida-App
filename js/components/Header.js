@@ -1,11 +1,16 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View, Image, Text} from 'react-native';
+import {ConfirmDialog} from 'react-native-simple-dialogs';
 import {Colors} from '../resources/Colors';
 import Button from './Button';
+import IconText from './IconText';
 
 class Header extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showDialog: false,
+    };
   }
 
   render() {
@@ -20,7 +25,62 @@ class Header extends Component {
             size: 35,
             color: 'white',
           }}
+          onPress={() => this.setState({showDialog: true})}
         />
+        <ConfirmDialog
+          visible={this.state.showDialog}
+          title="Help"
+          positiveButton={{
+            titleStyle: {color: 'black'},
+            title: 'OK',
+            onPress: () => this.setState({showDialog: false}),
+          }}>
+          <View>
+            <Text style={[styles.blackText, styles.title]}>Rating Icons</Text>
+            <IconText
+              textStyle={styles.blackText}
+              icon={{
+                name: 'checkmark-circle',
+                size: 25,
+                color: 'black',
+              }}
+              text="  Overall Rating"
+            />
+            <IconText
+              textStyle={styles.blackText}
+              icon={{
+                name: 'cash',
+                size: 25,
+                color: 'black',
+              }}
+              text="  Price Rating"
+            />
+            <IconText
+              textStyle={styles.blackText}
+              icon={{
+                name: 'ribbon',
+                size: 25,
+                color: 'black',
+              }}
+              text="  Quality Rating"
+            />
+            <IconText
+              textStyle={styles.blackText}
+              icon={{
+                name: 'trash',
+                size: 25,
+                color: 'black',
+              }}
+              text="  Clenliness Rating"
+            />
+          </View>
+          <Text style={[styles.blackText, styles.title]}>Relevant Topics</Text>
+          <Text style={styles.blackText}>
+            A review's text body only allows "relevant topics", such topics
+            explicitly include opinions on coffee and mentions of tea, cakes,
+            and pastries are not allowed.
+          </Text>
+        </ConfirmDialog>
       </View>
     );
   }
@@ -43,6 +103,15 @@ const styles = StyleSheet.create({
   help: {
     flex: 3,
     backgroundColor: 'transparent',
+  },
+  title: {
+    marginTop: 10,
+    marginBottom: 5,
+    fontSize: 16,
+    textDecorationLine: 'underline',
+  },
+  blackText: {
+    color: 'black',
   },
 });
 

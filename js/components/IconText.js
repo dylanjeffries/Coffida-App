@@ -11,9 +11,9 @@ class IconText extends Component {
     return (
       <View style={[styles.container, this.props.style]}>
         <Ionicons
-          name={this.props.iconName}
-          size={this.props.iconSize}
-          color={this.props.iconColor}
+          name={this.props.icon.name}
+          size={this.props.icon.size}
+          color={this.props.icon.color}
         />
         <Text style={[styles.text, this.props.textStyle]}>
           {this.props.text}

@@ -97,6 +97,7 @@ class LocationScr extends Component {
             renderItem={({item}) => (
               <ReviewItem
                 item={item}
+                navigation={this.props.navigation}
                 editable={false}
                 refresh={() => this.getLocation()}
               />

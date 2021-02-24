@@ -56,6 +56,7 @@ class MyReviewsScr extends Component {
             renderItem={({item}) => (
               <ReviewItem
                 item={item}
+                navigation={this.props.navigation}
                 refresh={() => this.getReviewData()}
                 editable={true}
               />

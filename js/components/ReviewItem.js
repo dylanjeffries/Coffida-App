@@ -10,7 +10,7 @@ class ReviewItem extends Component {
     super(props);
     this.state = {
       liked: this.props.item.review.liked,
-      photoUrl: '',
+      photo: null,
       params: {
         loc_id: this.props.item.location.location_id,
         rev_id: this.props.item.review.review_id,
@@ -19,8 +19,16 @@ class ReviewItem extends Component {
   }
 
   componentDidMount() {
+    // Get Review Photo
     this.getPhoto();
+    // Set Focus Listener
+    this.props.navigation.addListener('focus', () => this.onFocus());
   }
+
+  // When screen comes into focus
+  onFocus = () => {
+    this.getPhoto();
+  };
 
   componentDidUpdate(prevProps) {
     if (prevProps.item !== this.props.item) {
@@ -36,7 +44,11 @@ class ReviewItem extends Component {
     API.getLocationReviewPhoto(this.state.params).then((response) => {
       if (response.status === 200) {
         this.setState({
-          photoUrl: response.url,
+          photo: {uri: response.url},
+        });
+      } else {
+        this.setState({
+          photo: null,
         });
       }
     });
@@ -60,6 +72,13 @@ class ReviewItem extends Component {
     }
   };
 
+  editPhoto = () => {
+    this.props.navigation.navigate('Edit Photo', {
+      photo: this.state.photo,
+      params: this.state.params,
+    });
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -79,6 +98,7 @@ class ReviewItem extends Component {
                 size: 20,
                 color: 'cyan',
               }}
+              onPress={() => this.editPhoto()}
             />
             <Button
               style={styles.editButtonContainer}
@@ -103,35 +123,46 @@ class ReviewItem extends Component {
           </View>
         ) : null}
         <View style={styles.mainSection}>
-          {this.state.photoUrl ? (
+          {this.state.photo ? (
             <View style={styles.photoContainer}>
-              <Image style={styles.photo} source={{uri: this.state.photoUrl}} />
+              <Image
+                style={styles.photo}
+                source={{uri: this.state.photo.uri}}
+              />
             </View>
           ) : null}
           <View style={styles.info}>
             <View style={styles.ratings}>
               <IconText
-                iconName="checkmark-circle"
-                iconSize={20}
-                iconColor="white"
+                icon={{
+                  name: 'checkmark-circle',
+                  size: 20,
+                  color: 'white',
+                }}
                 text={this.props.item.review.overall_rating}
               />
               <IconText
-                iconName="cash"
-                iconSize={20}
-                iconColor="white"
+                icon={{
+                  name: 'cash',
+                  size: 20,
+                  color: 'white',
+                }}
                 text={this.props.item.review.price_rating}
               />
               <IconText
-                iconName="ribbon"
-                iconSize={20}
-                iconColor="white"
+                icon={{
+                  name: 'ribbon',
+                  size: 20,
+                  color: 'white',
+                }}
                 text={this.props.item.review.quality_rating}
               />
               <IconText
-                iconName="trash"
-                iconSize={20}
-                iconColor="white"
+                icon={{
+                  name: 'trash',
+                  size: 20,
+                  color: 'white',
+                }}
                 text={this.props.item.review.clenliness_rating}
               />
             </View>

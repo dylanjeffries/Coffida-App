@@ -210,6 +210,34 @@ class API {
       });
   };
 
+  // 11 - Delete a photo from a review
+  static deleteLocationReviewPhoto = async (params) => {
+    let token = await AsyncStorage.getItem('token');
+    return await fetch(
+      'http://10.0.2.2:3333/api/1.0.0/location/' +
+        params.loc_id +
+        '/review/' +
+        params.rev_id +
+        '/photo',
+      {
+        method: 'DELETE',
+        headers: {
+          'X-Authorization': token,
+        },
+      },
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return response;
+        } else {
+          throw Error(response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   // 12 - Like a review
   static postLocationReviewLike = async (params) => {
     let token = await AsyncStorage.getItem('token');
@@ -266,7 +294,7 @@ class API {
       });
   };
 
-  // 17 - Get location info
+  // 14 - Get location info
   static getLocation = async (params) => {
     return await fetch(
       'http://10.0.2.2:3333/api/1.0.0/location/' + params.loc_id,

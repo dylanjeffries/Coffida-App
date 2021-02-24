@@ -19,7 +19,7 @@ const ratingItems = [
   {label: '5', value: 5},
 ];
 
-class AddReviewScr extends Component {
+class EditReviewScr extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -80,7 +80,7 @@ class AddReviewScr extends Component {
       <View style={styles.container}>
         <Header style={styles.header} />
         <View style={styles.body}>
-          <Title style={styles.title} text="Enter your review below." />
+          <Title style={styles.title} text="Edit your review below." />
           <View style={styles.row}>
             <Selector
               style={styles.selector}
@@ -136,9 +136,9 @@ class AddReviewScr extends Component {
           <View style={styles.submitContainer}>
             <Button
               style={styles.submit}
-              text="Submit"
+              text="Save"
               disabled={!this.isFormValid()}
-              onPress={() => this.submit()}
+              onPress={() => this.save()}
             />
           </View>
         </View>
@@ -190,4 +190,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddReviewScr;
+export default EditReviewScr;

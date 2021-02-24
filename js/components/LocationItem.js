@@ -79,9 +79,11 @@ class LocationItem extends Component {
           </View>
           <View style={styles.ratings}>
             <IconText
-              iconName="checkmark-circle"
-              iconSize={20}
-              iconColor="white"
+              icon={{
+                name: 'checkmark-circle',
+                size: 20,
+                color: 'white',
+              }}
               text={
                 this.state.avg_overall_rating !== undefined &&
                 this.state.avg_overall_rating !== null
@@ -90,9 +92,11 @@ class LocationItem extends Component {
               }
             />
             <IconText
-              iconName="cash"
-              iconSize={20}
-              iconColor="white"
+              icon={{
+                name: 'cash',
+                size: 20,
+                color: 'white',
+              }}
               text={
                 this.state.avg_price_rating !== undefined &&
                 this.state.avg_price_rating !== null
@@ -101,9 +105,11 @@ class LocationItem extends Component {
               }
             />
             <IconText
-              iconName="ribbon"
-              iconSize={20}
-              iconColor="white"
+              icon={{
+                name: 'ribbon',
+                size: 20,
+                color: 'white',
+              }}
               text={
                 this.state.avg_quality_rating !== undefined &&
                 this.state.avg_quality_rating !== null
@@ -112,9 +118,11 @@ class LocationItem extends Component {
               }
             />
             <IconText
-              iconName="trash"
-              iconSize={20}
-              iconColor="white"
+              icon={{
+                name: 'trash',
+                size: 20,
+                color: 'white',
+              }}
               text={
                 this.state.avg_clenliness_rating !== undefined &&
                 this.state.avg_clenliness_rating !== null
