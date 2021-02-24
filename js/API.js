@@ -153,6 +153,62 @@ class API {
       });
   };
 
+  // 7 - Update a review
+  static patchLocationReview = async (params, body) => {
+    let token = await AsyncStorage.getItem('token');
+    return await fetch(
+      'http://10.0.2.2:3333/api/1.0.0/location/' +
+        params.loc_id +
+        '/review/' +
+        params.rev_id,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Authorization': token,
+        },
+        body: JSON.stringify(body),
+      },
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return response;
+        } else {
+          throw Error(response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  // 8 - Delete a review
+  static deleteLocationReview = async (params) => {
+    let token = await AsyncStorage.getItem('token');
+    return await fetch(
+      'http://10.0.2.2:3333/api/1.0.0/location/' +
+        params.loc_id +
+        '/review/' +
+        params.rev_id,
+      {
+        method: 'DELETE',
+        headers: {
+          'X-Authorization': token,
+        },
+      },
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return response;
+        } else {
+          throw Error(response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   // 9 - Get a photo for a review
   static getLocationReviewPhoto = async (params) => {
     return await fetch(

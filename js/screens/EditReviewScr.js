@@ -23,12 +23,11 @@ class EditReviewScr extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      overallRating: -1,
-      priceRating: -1,
-      qualityRating: -1,
-      clenlinessRating: -1,
-      reviewBody: '',
-      photo: null,
+      overallRating: props.route.params.review.overall_rating,
+      priceRating: props.route.params.review.price_rating,
+      qualityRating: props.route.params.review.quality_rating,
+      clenlinessRating: props.route.params.review.clenliness_rating,
+      reviewBody: props.route.params.review.review_body,
     };
     // Create bad-words filter for review body profanity check
     var Filter = require('bad-words');
@@ -37,8 +36,8 @@ class EditReviewScr extends Component {
   }
 
   // Use API to create new account using entered details
-  submit = async () => {
-    let params = {loc_id: this.props.route.params.location_id};
+  save = async () => {
+    let params = this.props.route.params.params;
     let body = {
       overall_rating: this.state.overallRating,
       price_rating: this.state.priceRating,
@@ -46,12 +45,12 @@ class EditReviewScr extends Component {
       clenliness_rating: this.state.clenlinessRating,
       review_body: this.state.reviewBody,
     };
-    let response = await API.postLocationReview(params, body);
-    if (response.status === 201) {
-      ToastAndroid.show('Review added', ToastAndroid.SHORT);
-      this.props.navigation.navigate('Location');
+    let response = await API.patchLocationReview(params, body);
+    if (response.status === 200) {
+      ToastAndroid.show('Review edited', ToastAndroid.SHORT);
+      this.props.navigation.navigate('My Reviews');
     } else {
-      ToastAndroid.show('Submission failed', ToastAndroid.SHORT);
+      ToastAndroid.show('Save failed', ToastAndroid.SHORT);
     }
   };
 

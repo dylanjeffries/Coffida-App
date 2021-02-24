@@ -28,7 +28,6 @@ class AddReviewScr extends Component {
       qualityRating: -1,
       clenlinessRating: -1,
       reviewBody: '',
-      photo: null,
     };
     // Create bad-words filter for review body profanity check
     var Filter = require('bad-words');

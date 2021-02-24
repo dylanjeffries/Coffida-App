@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {StyleSheet, View, Text, Image, Alert, ToastAndroid} from 'react-native';
 import API from '../API';
 import {Colors} from '../resources/Colors';
 import Button from './Button';
@@ -40,35 +40,32 @@ class ReviewItem extends Component {
     this.setState({liked: this.props.item.review.liked});
   };
 
-  getPhoto = () => {
-    API.getLocationReviewPhoto(this.state.params).then((response) => {
-      if (response.status === 200) {
-        this.setState({
-          photo: {uri: response.url},
-        });
-      } else {
-        this.setState({
-          photo: null,
-        });
-      }
-    });
-  };
-
-  toggleLike = () => {
-    if (this.state.liked) {
-      API.deleteLocationReviewLike(this.state.params).then((response) => {
-        if (response.status === 200) {
-          this.setState({liked: false});
-          this.props.refresh();
-        }
+  getPhoto = async () => {
+    let response = await API.getLocationReviewPhoto(this.state.params);
+    if (response.status === 200) {
+      this.setState({
+        photo: {uri: response.url},
       });
     } else {
-      API.postLocationReviewLike(this.state.params).then((response) => {
-        if (response.status === 200) {
-          this.setState({liked: true});
-          this.props.refresh();
-        }
+      this.setState({
+        photo: null,
       });
+    }
+  };
+
+  toggleLike = async () => {
+    if (this.state.liked) {
+      let response = await API.deleteLocationReviewLike(this.state.params);
+      if (response.status === 200) {
+        this.setState({liked: false});
+        this.props.refresh();
+      }
+    } else {
+      let response = await API.postLocationReviewLike(this.state.params);
+      if (response.status === 200) {
+        this.setState({liked: true});
+        this.props.refresh();
+      }
     }
   };
 
@@ -77,6 +74,41 @@ class ReviewItem extends Component {
       photo: this.state.photo,
       params: this.state.params,
     });
+  };
+
+  editReview = () => {
+    this.props.navigation.navigate('Edit Review', {
+      review: this.props.item.review,
+      params: this.state.params,
+    });
+  };
+
+  deleteAlert = () => {
+    Alert.alert(
+      'Delete Review',
+      'Are you sure?',
+      [
+        {
+          text: 'No, Go Back',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes, Delete',
+          onPress: () => this.deleteReview(),
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  deleteReview = async () => {
+    let response = await API.deleteLocationReview(this.state.params);
+    if (response.status === 200) {
+      this.props.refresh();
+      ToastAndroid.show('Review deleted', ToastAndroid.SHORT);
+    } else {
+      ToastAndroid.show('Delete failed', ToastAndroid.SHORT);
+    }
   };
 
   render() {
@@ -109,6 +141,7 @@ class ReviewItem extends Component {
                 size: 20,
                 color: 'orange',
               }}
+              onPress={() => this.editReview()}
             />
             <Button
               style={styles.editButtonContainer}
@@ -119,6 +152,7 @@ class ReviewItem extends Component {
                 size: 20,
                 color: 'red',
               }}
+              onPress={() => this.deleteAlert()}
             />
           </View>
         ) : null}
