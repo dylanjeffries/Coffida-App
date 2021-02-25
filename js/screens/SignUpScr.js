@@ -4,6 +4,8 @@ import {View, Text, StyleSheet} from 'react-native';
 import API from '../API';
 import Button from '../components/Button';
 import TextInputWithError from '../components/TextInputWithError';
+import Title from '../components/Title';
+import ValidatedTextInput from '../components/ValidatedTextInput';
 import {Colors} from '../resources/Colors';
 
 class SignUpScr extends Component {
@@ -51,67 +53,66 @@ class SignUpScr extends Component {
     return regex.test(name) ? true : false;
   };
 
-  isEmailValid = (email) => {
+  isEmailValid = () => {
     let regex = /^\S+@\S+\.\S+$/;
-    return regex.test(email) ? true : false;
+    return regex.test(this.state.email) ? true : false;
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.title}>
-          <Text style={styles.titleText}>Enter your details below.</Text>
-        </View>
-        <View style={styles.inputs}>
-          <TextInputWithError
-            containerStyle={styles.textInput}
+        <View style={styles.body}>
+          <Title style={styles.title} text="Enter your details below." />
+          <ValidatedTextInput
+            style={styles.textInput}
             placeholder="First Name"
-            onChangeText={(firstName) => this.setState({firstName})}
+            validationText="Name must only contain letters."
+            hide={this.isNameValid(this.state.firstName)}
+            onTextChange={(firstName) => this.setState({firstName})}
             value={this.state.firstName}
-            errorText="Name must only contain letters."
-            showError={!this.isNameValid(this.state.firstName)}
           />
-          <TextInputWithError
-            containerStyle={styles.textInput}
+          <ValidatedTextInput
+            style={styles.textInput}
             placeholder="Last Name"
-            onChangeText={(lastName) => this.setState({lastName})}
+            validationText="Name must only contain letters."
+            hide={this.isNameValid(this.state.lastName)}
+            onTextChange={(lastName) => this.setState({lastName})}
             value={this.state.lastName}
-            errorText="Name must only contain letters."
-            showError={!this.isNameValid(this.state.lastName)}
           />
-          <TextInputWithError
-            containerStyle={styles.textInput}
+          <ValidatedTextInput
+            style={styles.textInput}
             placeholder="Email"
-            onChangeText={(email) => this.setState({email})}
+            validationText="Email must match format: example@email.com"
+            hide={this.isEmailValid()}
+            onTextChange={(email) => this.setState({email})}
             value={this.state.email}
-            errorText="Email must match format: name@email.com"
-            showError={!this.isEmailValid(this.state.email)}
           />
-          <TextInputWithError
-            containerStyle={styles.textInput}
+          <ValidatedTextInput
+            style={styles.textInput}
             placeholder="Password"
-            secureTextEntry={true}
-            onChangeText={(password) => this.setState({password})}
+            validationText="Password must be at least 6 characters long."
+            hide={this.state.password.length > 5}
+            onTextChange={(password) => this.setState({password})}
             value={this.state.password}
-            errorText="Password must be at least 6 characters long."
-            showError={this.state.password.length < 6}
-          />
-          <TextInputWithError
-            containerStyle={styles.textInput}
-            placeholder="Confirm Password"
             secureTextEntry={true}
-            onChangeText={(confirmPassword) => this.setState({confirmPassword})}
+          />
+          <ValidatedTextInput
+            style={styles.textInput}
+            placeholder="Confirm Password"
+            validationText="Passwords must match."
+            hide={this.state.password === this.state.confirmPassword}
+            onTextChange={(confirmPassword) => this.setState({confirmPassword})}
             value={this.state.confirmPassword}
-            errorText="Passwords do not match."
-            showError={this.state.password !== this.state.confirmPassword}
+            secureTextEntry={true}
           />
-        </View>
-        <View style={styles.submit}>
-          <Button
-            text="Submit"
-            onPress={() => this.submit()}
-            disabled={!this.isFormValid()}
-          />
+          <View style={styles.submitContainer}>
+            <Button
+              style={styles.submit}
+              text="Submit"
+              disabled={!this.isFormValid()}
+              onPress={() => this.submit()}
+            />
+          </View>
         </View>
       </View>
     );
@@ -121,31 +122,32 @@ class SignUpScr extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.blue_5,
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: Colors.blue_5,
+  },
+  header: {
+    flex: 1,
+  },
+  body: {
+    width: '70%',
+    flex: 14,
+    paddingVertical: 10,
   },
   title: {
     flex: 1,
-    justifyContent: 'center',
-  },
-  titleText: {
-    padding: 10,
-    fontSize: 18,
-    backgroundColor: Colors.blue_7,
-    color: 'white',
-  },
-  inputs: {
-    flex: 4,
-    width: '70%',
+    marginBottom: 15,
   },
   textInput: {
-    marginBottom: 10,
+    flex: 1,
+    marginBottom: 15,
+  },
+  submitContainer: {
+    flex: 2,
+    justifyContent: 'flex-start',
   },
   submit: {
-    flex: 1,
-    width: '100%',
-    alignItems: 'center',
+    width: '30%',
+    alignSelf: 'center',
   },
 });
 
