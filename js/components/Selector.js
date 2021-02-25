@@ -31,10 +31,8 @@ class Selector extends Component {
           size={this.props.icon.size}
           color={this.props.icon.color}
         />
-        <View style={styles.valueContainer}>
-          <Text style={[styles.value, this.props.valueStyle]}>
-            {this.getLabel()}
-          </Text>
+        <View style={[styles.valueContainer, this.props.valueStyle]}>
+          <Text style={styles.value}>{this.getLabel()}</Text>
           <Ionicons
             style={styles.downArrow}
             name="caret-down-sharp"

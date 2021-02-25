@@ -36,7 +36,7 @@ class Header extends Component {
             onPress: () => this.setState({showDialog: false}),
           }}>
           <View>
-            <Text style={[styles.blackText, styles.title]}>Rating Icons</Text>
+            <Text style={[styles.blackText, styles.title]}>Icons</Text>
             <IconText
               textStyle={styles.blackText}
               icon={{
@@ -72,6 +72,15 @@ class Header extends Component {
                 color: 'black',
               }}
               text="  Clenliness Rating"
+            />
+            <IconText
+              textStyle={styles.blackText}
+              icon={{
+                name: 'locate-outline',
+                size: 25,
+                color: 'black',
+              }}
+              text="  Location range"
             />
           </View>
           <Text style={[styles.blackText, styles.title]}>Relevant Topics</Text>
