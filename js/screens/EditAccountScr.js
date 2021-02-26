@@ -1,10 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, ToastAndroid} from 'react-native';
+import {View, StyleSheet, ToastAndroid} from 'react-native';
 import API from '../API';
 import Button from '../components/Button';
 import Header from '../components/Header';
-import TextInputWithError from '../components/TextInputWithError';
 import Title from '../components/Title';
 import ValidatedTextInput from '../components/ValidatedTextInput';
 import {Colors} from '../resources/Colors';

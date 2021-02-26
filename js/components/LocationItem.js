@@ -28,20 +28,19 @@ class LocationItem extends Component {
     });
   };
 
-  toggleFavourite = () => {
+  // Use API to either favourite or unfavourite a location based on the toggle state
+  toggleFavourite = async () => {
     let params = {loc_id: this.state.location_id};
     if (this.state.favourite) {
-      API.deleteLocationFavourite(params).then((response) => {
-        if (response.status === 200) {
-          this.setState({favourite: false});
-        }
-      });
+      let response = await API.deleteLocationFavourite(params);
+      if (response.status === 200) {
+        this.setState({favourite: false});
+      }
     } else {
-      API.postLocationFavourite(params).then((response) => {
-        if (response.status === 200) {
-          this.setState({favourite: true});
-        }
-      });
+      let response = await API.postLocationFavourite(params);
+      if (response.status === 200) {
+        this.setState({favourite: true});
+      }
     }
   };
 

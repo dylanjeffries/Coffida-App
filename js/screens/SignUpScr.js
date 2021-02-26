@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import {ToastAndroid} from 'react-native';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import API from '../API';
 import Button from '../components/Button';
-import TextInputWithError from '../components/TextInputWithError';
 import Title from '../components/Title';
 import ValidatedTextInput from '../components/ValidatedTextInput';
 import {Colors} from '../resources/Colors';

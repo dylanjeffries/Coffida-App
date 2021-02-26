@@ -53,6 +53,7 @@ class ReviewItem extends Component {
     }
   };
 
+  // Use the API to either like or dislike a review based on the toggle state
   toggleLike = async () => {
     if (this.state.liked) {
       let response = await API.deleteLocationReviewLike(this.state.params);

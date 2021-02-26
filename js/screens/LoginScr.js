@@ -43,11 +43,16 @@ class LoginScr extends Component {
     let autoLogin = await AsyncStorage.getItem('auto_login');
     if (autoLogin === 'true') {
       let response = await API.getUser();
+      // If old token is still valid
       if (response.status === 200) {
         // Reset state
         this.resetState();
         // Switch screens
         this.props.navigation.navigate('Logged In');
+      }
+      // If old token is no longer valid, user is now unauthorised
+      else {
+        this.setState({loading: false});
       }
     } else {
       this.setState({loading: false});
@@ -193,6 +198,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  invalid: {
+    marginTop: 20,
   },
   loginSignUp: {
     flex: 12,
